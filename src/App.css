@@ -107,6 +107,7 @@ h2 {
     font-size: 40px;
     color: var(--spartanRed);
     font-weight: 700;
+
 }
 
 
@@ -119,14 +120,12 @@ h2, h5 {
     font-size: 25px;
 }
 
-h3, h4 {
+h4 {
     font-size: 15px;
+    text-align: center;
+
 }
 
-.textBox {
-    margin-left: 15px;
-    padding: 1px;
-}
 
 .arrow {
     width: 0px;
@@ -158,9 +157,10 @@ h3, h4 {
 }
 
 input {
-    width: 320px;
+    width: 200px;
     height: 30px;
     border-radius: 0.5rem;
+    text-align: center;
 }
 
 button3 {
@@ -168,10 +168,10 @@ button3 {
     color: var(--buttonOrange);
     width: 0;
     border-radius: 2rem;
-    border: 1px solid;
+    border: 0px solid;
     font-size: 16px;
-    padding: 5px 25px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 5px 15px;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
     text-align: center;
 }
 
@@ -197,6 +197,7 @@ button1 {
     padding: 5px 50px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 
 
 footer {
@@ -262,13 +263,15 @@ header {
 .centerObject {
     text-align: center;
     margin: auto;
-    border: 0px solid green;
+    border: 2px solid green;
     width: 100%;
     padding: 30px;
 }
 
 .centerObject2 {
     text-align: center;
+    margin: auto;
+   
 }
 
 walletTable {

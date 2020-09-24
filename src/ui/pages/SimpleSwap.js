@@ -3,8 +3,8 @@ import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
 import { DownOutlined } from '@ant-design/icons';
-import { SPARTA_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getWalletData } from '../../client/web3'
-import { message, Row } from 'antd';
+import { SPARTA_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getWalletData, getPoolsData, getListedTokens } from '../../client/web3'
+import { message, Row, Input } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, formatUSD } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
 import { Center } from '../components/elements';
@@ -16,6 +16,12 @@ var utils = require('ethers').utils;
 const SimpleSwap = (props) => {
 
     const context = useContext(Context)
+    const [message, setMessage] = useState()
+
+    const [recipientError, setRecipientError] = useState(false)
+    const [isError, setIsError] = useState(false)
+
+    const [approving, setApproving] = useState(false);
     const [tokenFrom, setAssetFrom] = useState(SPARTA_ADDR);
     const [tokenTo, setAssetTo] = useState('0x0000000000000000000000000000000000000000');
     const [approval, setApproval] = useState(false)
@@ -42,15 +48,23 @@ const SimpleSwap = (props) => {
     const getData = async () => {
         let tokenDetails = await getTokenData(tokenFrom, context.walletData)
         setTokenData(tokenDetails)
+
+        let poolsData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
+        context.setContext({ 'poolsData': poolsData })
+
+        let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
+        context.setContext({ 'tokenArray': tokenArray })
     }
 
+
     const changeToken = async (e) => {
+
         setAssetFrom(e.target.value)
         setApproval(false)
         checkApproval(e.target.value)
         let tokenDetails = await getTokenData(tokenFrom, context.walletData)
         setTokenData(tokenDetails)
-        setSwapData(getSwapData(tokenDetails))
+        setSwapData(getSwapData(tokenDetails)) //getSwapData calls pools
     }
 
     const getSwapData = async (input, inputTokenData, outputTokenData, poolData) => {
@@ -80,32 +94,47 @@ const SimpleSwap = (props) => {
         if (+approval > 0) {
             setApproval(true)
         }
+        else {
+            setRecipientError(('Approval Failed'))
+            setIsError(true)
+        }
     }
 
     const approve = async () => {
         const contract = getTokenContract(tokenFrom)
         // (utils.parseEther(10**18)).toString()
         const supply = await contract.methods.totalSupply().call()
-        await contract.methods.approve(SPARTA_ADDR, supply).send({
-            from: context.walletData.address,
-            gasPrice: '',
-            gas: ''
-        })
-        message.success(`Transaction Sent!`, 2);
+        await contract.methods.approve(SPARTA_ADDR, supply).send({ from: context.walletData.address, gasPrice: '', gas: '' })
+        //message.success(`Transaction Sent!`, 2);
     }
 
     const swap = async () => {
         setStartTx(true)
         let contract = getSpartaContract()
-        await contract.methods.upgrade(tokenTo).send({
-            from: context.walletData.address,
-            gasPrice: '',
-            gas: ''
-        })
-        message.success(`Transaction Sent!`, 2);
+        await contract.methods.upgrade(tokenTo).send({ from: context.walletData.address, gasPrice: '', gas: '' })
+        //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
+    }
+
+    const swapTo = async () => {
+        setStartTx(true)
+
+    }
+
+
+    const changeInputToken = async (e) => {
+        setAssetFrom(e.target.value)
+        setApproval(false)
+        let tokenDetails = await getTokenData(tokenFrom, context.walletData)
+        setTokenData(tokenDetails)
+
+    }
+
+    const changeOutputToken = async (e) => {
+        setAssetTo(e.target.value)
+
     }
 
     return (
@@ -115,7 +144,7 @@ const SimpleSwap = (props) => {
                 <img src='favicon.png' />
                 <br /><br />
             </Center>
-            <br /><br />
+            
             <div class='outerContainer'>
                 <Container>
                     <div class='centerObject2'>
@@ -123,11 +152,13 @@ const SimpleSwap = (props) => {
                     </div>
                     <div class='container2'>
                         <Container>
-                            <h2>&nbsp; Input</h2>
-                            <div class='textBox'>
-                                <input onChange={changeToken} placeholder={'   Enter BEP2E Asset Address'}></input>&nbsp;<button3 onClick={openNav}><DownOutlined /></button3>
+                            <div class='centerObject2'>
+                                <h2>Input</h2><Input placeholder={'Enter BEP2E Asset Address'}></Input>
+                                < br />< br />
+                                <Input placeholder={'0.0'}></Input>
+                                <h4>&nbsp; Balance: {utils.formatEther(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</h4>
                             </div>
-                            <h4>&nbsp; Balance: {utils.formatEther(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</h4>
+
                         </Container>
                     </div>
                     <div class='arrow'>
@@ -137,14 +168,17 @@ const SimpleSwap = (props) => {
                     <br />
                     <div class='container2'>
                         <Container>
-                            <h2>&nbsp; Output</h2>
-                            <div class='textBox'>
-                                <input onChange={changeToken} placeholder={'  Enter BEP2E Asset Address'}></input>&nbsp;<button3 onClick={openNav}><DownOutlined /></button3>
+                            <div class='centerObject2'>
+                            <h2>Output</h2>
+                            <Input placeholder={'Enter BEP2E Asset Address'}></Input>
+                               < br />< br />
+                                <Input placeholder={'0.0'}></Input>
+                                <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })}</h4>
                             </div>
-                            <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })}</h4>
                         </Container>
+                        
                     </div>
-                    <h4>&nbsp; Slippage: {swapData.slip}%</h4>
+                    <h4>&nbsp; Slippage: {swapData.slip}%</h4>                    
 
                 </Container>
                 <br /><br />
