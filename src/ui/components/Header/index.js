@@ -3,12 +3,13 @@ import { Context } from '../../../context'
 import { Layout, message } from 'antd';
 import Web3 from 'web3'
 import { getAddressShort, } from '../../../utils'
-import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools} from '../../../client/web3'
+import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools, getPoolsData} from '../../../client/web3'
 import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from './headerStyles'
 import '../../../App.css'
 import Sidebar, { openNav, closeNav } from '../../layout/Sidebar'
 import spinner from '../../../assets/images/spinner.svg' 
 import { SpinnerWrapper } from '../../layout/theme';
+import { CheckOutlined } from '@ant-design/icons'
 
 const { Header } = Layout;
 
@@ -17,8 +18,7 @@ const Headbar = (props) => {
     const context = useContext(Context)
     const [connecting, setConnecting] = useState(false)
     const [connected, setConnected] = useState(false)
-    const [visible, setVisible] = useState(false);
-
+  
     useEffect(() => {
         connectWallet()
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,7 +37,9 @@ const Headbar = (props) => {
 
             let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
             context.setContext({ 'tokenArray': tokenArray })
-            // context.setContext({ 'poolsData': await getPoolsData(tokenArray) })
+
+            let poolsData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
+            context.setContext({ 'poolsData': poolsData })
 
             let allTokens = assetArray.concat(tokenArray)
             var sortedTokens = [...new Set(allTokens)].sort()
@@ -88,7 +90,9 @@ const Headbar = (props) => {
 
     const addr = () => {
         return getAddressShort(context.walletData?.address)
-    }
+    }     
+
+
 
     return (
         <div>
@@ -111,13 +115,13 @@ const Headbar = (props) => {
                                 <button2>CONNECTING</button2>
                             }   
                             {connected &&
-                                <button2 onClick={openNav}>{addr()}</button2>
+                                <button2 onClick={openNav}><CheckOutlined /> &nbsp; {addr()}</button2>
                             }
                         </HeaderElement>
                     </HeaderSpan>
                 </MigrateBannerLarge>
             </HeaderFrame>
-            <Sidebar />           
+            <Sidebar />
         </div>
     )
 }
@@ -127,12 +131,3 @@ export default Headbar
 
 
 
-/* <h1>Tokens on your wallet</h1>
-                {context.connected &&
-                    <AssetTable />
-                }
-                <h1>Tokens you can swap to</h1>
-                {context.connected &&
-                    <AssetTable />
-                }
-                 */
