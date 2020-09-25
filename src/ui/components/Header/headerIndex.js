@@ -29,7 +29,7 @@ const Headbar = (props) => {
         window.web3 = new Web3(window.ethereum);
         const account = (await window.web3.eth.getAccounts())[0];
         if (account) {
-            message.loading('Loading tokens', 3);
+            //message.loading('Loading tokens', 3);
             let assetArray = context.assetArray ? context.assetArray : await getAssets()
             context.setContext({ 'assetArray': assetArray })
             //let assetDetailsArray = context.assetDetailsArray ? context.assetDetailsArray : await getTokenDetails(account, assetArray)
