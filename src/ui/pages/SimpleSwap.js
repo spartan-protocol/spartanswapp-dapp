@@ -2,14 +2,14 @@ import { Container } from '../layout/theme/components'
 import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
-import { DownOutlined } from '@ant-design/icons';
-import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getWalletData, getPoolsData, getListedTokens, getListedPools } from '../../client/web3'
-import { message, Row, Input } from 'antd';
+
+import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools } from '../../client/web3'
+import { message, Input } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, formatUSD } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
 import { Center } from '../components/elements';
-import { openNav, closeNav } from '../layout/Sidebar'
-import { Fragment } from 'ethers/lib/utils';
+
+
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
@@ -24,7 +24,7 @@ const SimpleSwap = (props) => {
 
     const [approving, setApproving] = useState(false);
     const [tokenFrom, setAssetFrom] = useState(SPARTA_ADDR);
-    const [amountFrom, setAmountFrom] = useState('0')
+    const [inputAmount, setinputAmount] = useState('0')
     const [amountTo, setAmountTo] = useState('0')
 
     const [tokenTo, setAssetTo] = useState('0x0000000000000000000000000000000000000000');
@@ -78,6 +78,7 @@ const SimpleSwap = (props) => {
         context.setContext({'poolArray' : poolArray })
         let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
+       
     }
 
 
@@ -143,8 +144,8 @@ const SimpleSwap = (props) => {
         setAssetTo(e.target.value)
     }
 
-    const inputAmount = async (e) => {
-        setAmountFrom(e.target.value)
+    const inputTokenAmount = async (e) => {
+        setinputAmount(e.target.value)
     }
 
     
@@ -154,7 +155,18 @@ const SimpleSwap = (props) => {
         checkApproval(tokenFrom)
         let tokenDetails = await getTokenData(tokenFrom, context.walletData)
         setTokenData(tokenDetails)
-    setSwapData(getSwapData(tokenDetails)) //getSwapData calls pools
+        //getSwapData calls pools
+        //setSwapData(getSwapData(inputAmount, tokenDetails, tokenTo, context.poolsData))
+
+    }
+    const changeTokenTo = async (e) => {
+        setAssetTo(e.target.value)
+        setApproval(false)
+        checkApproval(tokenTo)
+        let tokenDetails = await getTokenData(tokenTo, context.walletData)
+        setTokenData(tokenDetails)
+        //getSwapData calls pools
+        //setSwapData(getSwapData(inputAmount, tokenDetails, tokenTo, context.poolsData))
     }
 
     const Image = () => {
@@ -174,16 +186,17 @@ const SimpleSwap = (props) => {
     }
 
     return (
-        <div>
+        
+        <div>            
             <Image />
             <div class='outerContainer'>
                 <Container>
                     <div class='container2'>
                         <div class='centerObject2'>
                             <Container>
-                                <h2>Input</h2><Input onChange={inputToken} placeholder={'Enter BEP2E Asset Address'}></Input>
+                                <h2>Input</h2><Input onChange={changeToken} placeholder={'Enter BEP2E Asset Address'}></Input>
                                 < br />< br />
-                                <Input placeholder={'0.0'} onChange={inputAmount} ></Input>
+                                <Input placeholder={'0.0'} onChange={inputTokenAmount} ></Input>
                                 <h4>&nbsp; Balance: {utils.formatEther(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</h4>
                             </Container>
                         </div>
@@ -197,9 +210,9 @@ const SimpleSwap = (props) => {
                         <Container>
                             <div class='centerObject2'>
                                 <h2>Output</h2>
-                                <Input placeholder={'Enter BEP2E Asset Address'} onChange={outputToken}></Input>
+                                <Input placeholder={'Enter BEP2E Asset Address'} onChange={changeTokenTo}></Input>
                                 < br />< br />
-                                <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })}</h4>
+                                <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })} {tokenData.symbol}</h4>
                             </div>
                         </Container>
                     </div>
