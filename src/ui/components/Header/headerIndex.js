@@ -29,7 +29,7 @@ const Headbar = (props) => {
         window.web3 = new Web3(window.ethereum);
         const account = (await window.web3.eth.getAccounts())[0];
         if (account) {
-            message.loading('Loading tokens', 3);
+            //message.loading('Loading tokens', 3);
             let assetArray = context.assetArray ? context.assetArray : await getAssets()
             context.setContext({ 'assetArray': assetArray })
             //let assetDetailsArray = context.assetDetailsArray ? context.assetDetailsArray : await getTokenDetails(account, assetArray)
@@ -47,7 +47,7 @@ const Headbar = (props) => {
             let tokenDetailsArray = context.tokenDetailsArray ? context.tokenDetailsArray : await getTokenDetails(account, sortedTokens)
             context.setContext({ 'tokenDetailsArray': tokenDetailsArray })
 
-            message.loading('Loading wallet data', 3);
+            //message.loading('Loading wallet data', 3);
             let walletData = await getWalletData(account, tokenDetailsArray)
             context.setContext({ 'walletData': walletData })
             console.log(walletData)
@@ -62,7 +62,7 @@ const Headbar = (props) => {
             await getSpartaPrice()
             setConnecting(false)
             setConnected(true)
-            message.success('Loaded!', 2);
+            //message.success('Loaded!', 2);
         } else {
             await ethEnabled()
             setConnected(false)
@@ -115,7 +115,7 @@ const Headbar = (props) => {
                                 <button2>CONNECTING</button2>
                             }   
                             {connected &&
-                                <button2 onClick={openNav}><CheckOutlined /> &nbsp; {addr()}</button2>
+                                <button2 onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</button2>
                             }
                         </HeaderElement>
                     </HeaderSpan>

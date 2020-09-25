@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Layout } from 'antd';
 import './App.css';
 //import 'antd/dist/antd.css'
-import Headbar from './ui/components/Header'
+import Headbar from './ui/components/Header/headerIndex'
 //import Headbar from './ui/layout/Header'
 import SimpleSwap from './ui/pages/SimpleSwap'
 import { ContextProvider } from './context'

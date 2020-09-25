@@ -27,7 +27,7 @@ export const getWeb3 = () => {
     return new Web3(Web3.givenProvider || "http://localhost:7545")
 }
 export const getExplorerURL = () => {
-    return "https://explorer.binance.org/smart-testnet/"
+    return "https://testnet.bscscan.com//"
 }
 export const getAccount = async () => {
     var web3_ = getWeb3()
@@ -89,12 +89,13 @@ export const getAssets = async () => {
 }
 
 // Build out Asset Details, as long as have balance
-export const getTokenDetails = async (address, assetArray) => {
+export const getTokenDetails = async (address, tokenArray) => {
     let assetDetailsArray = []
-    for (let i = 0; i < assetArray.length; i++) {
+    for (let i = 0; i < tokenArray.length; i++) {
         let utilsContract = getUtilsContract()
-        let assetDetails = await utilsContract.methods.getTokenDetailsWithMember(assetArray[i], address).call()
-        if(+assetDetails.balance > 0){
+        let token = tokenArray[i] === WBNB_ADDR ? BNB_ADDR : tokenArray[i]
+        let assetDetails = await utilsContract.methods.getTokenDetailsWithMember(token, address).call()
+        if (+assetDetails.balance > 0) {
             assetDetailsArray.push(assetDetails)
         }
     }
@@ -117,7 +118,7 @@ export const getListedTokens = async () => {
     } catch (err) {
         console.log(err)
     }
-     
+
     console.log({ tokenArray })
     return tokenArray
 }
@@ -125,11 +126,11 @@ export const getListedTokens = async () => {
 export const getAlltokens = async () => {
     let assetArray = await getAssets()
     let tokenArray = await getListedTokens()
-    let allTokens= assetArray.concat(tokenArray)
+    let allTokens = assetArray.concat(tokenArray)
     var sortedTokens = [...new Set(allTokens)].sort()
     return sortedTokens;
 }
-export const getListedPools= async () => {
+export const getListedPools = async () => {
     var contract = getUtilsContract()
     let poolArray = await contract.methods.allPools().call()
     console.log({ poolArray })
@@ -147,18 +148,19 @@ export const getPoolsData = async (tokenArray) => {
 
 export const getPool = async (address) => {
     var contract = getUtilsContract()
-    let tokenDetails = await contract.methods.getTokenDetails(address).call()
-    let poolDataRaw = await contract.methods.getPoolData(address).call()
-    let apy = await contract.methods.getPoolAPY(address).call()
+    let token = address === WBNB_ADDR ? BNB_ADDR : address
+    let tokenDetails = await contract.methods.getTokenDetails(token).call()
+    let poolDataRaw = await contract.methods.getPoolData(token).call()
+    let apy = await contract.methods.getPoolAPY(token).call()
     let poolData = {
         'symbol': tokenDetails.symbol,
         'name': tokenDetails.name,
-        'address': address,
-        'price': +poolDataRaw.baseAmt / +poolDataRaw.tokenAmt,
+        'address': token,
+        'price': +poolDataRaw.baseAmount / +poolDataRaw.tokenAmount,
         'volume': +poolDataRaw.volume,
-        'baseAmt': +poolDataRaw.baseAmt,
-        'tokenAmt': +poolDataRaw.tokenAmt,
-        'depth': 2 * +poolDataRaw.baseAmt,
+        'baseAmount': +poolDataRaw.baseAmount,
+        'tokenAmount': +poolDataRaw.tokenAmount,
+        'depth': 2 * +poolDataRaw.baseAmount,
         'txCount': +poolDataRaw.txCount,
         'apy': +apy,
         'units': +poolDataRaw.poolUnits,
@@ -173,15 +175,15 @@ export const getPoolData = async (address, poolsData) => {
 }
 
 export const getNetworkData = async (poolsData) => {
-    let totalVolume = poolsData.reduce((accum, item) => accum+item.volume, 0)
-    let totalStaked = poolsData.reduce((accum, item) => accum+item.depth, 0)
-    let totalTx = poolsData.reduce((accum, item) => accum+item.txCount, 0)
-    let totalRevenue = poolsData.reduce((accum, item) => accum+item.fees, 0)
+    let totalVolume = poolsData.reduce((accum, item) => accum + item.volume, 0)
+    let totalPooled = poolsData.reduce((accum, item) => accum + item.depth, 0)
+    let totalTx = poolsData.reduce((accum, item) => accum + item.txCount, 0)
+    let totalRevenue = poolsData.reduce((accum, item) => accum + item.fees, 0)
 
     const networkData = {
-        'pools' : poolsData.length,
+        'pools': poolsData.length,
         'totalVolume': totalVolume,
-        'totalStaked': totalStaked,
+        'totalPooled': totalPooled,
         'totalTx': totalTx,
         'totalRevenue': totalRevenue,
     }
@@ -189,10 +191,10 @@ export const getNetworkData = async (poolsData) => {
     return (networkData)
 }
 
-export const getGlobalData = async ()  => {
+export const getGlobalData = async () => {
     var contract = getUtilsContract()
     let globalData = await contract.methods.getGlobalDetails().call()
-    console.log({globalData})
+    console.log({ globalData })
     return globalData
 }
 
@@ -209,6 +211,12 @@ export const getWalletData = async (address, tokenDetailsArray) => {
         'balance': await getTokenContract(SPARTA_ADDR).methods.balanceOf(address).call(),
         'address': SPARTA_ADDR
     })
+    tokens.push({
+        'symbol': 'WBNB',
+        'name': 'Wrapped BNB',
+        'balance': await getTokenContract(WBNB_ADDR).methods.balanceOf(address).call(),
+        'address': WBNB_ADDR
+    })
 
     for (let i = 0; i < tokenDetailsArray.length; i++) {
         var obj = tokenDetailsArray[i]
@@ -223,7 +231,8 @@ export const getWalletData = async (address, tokenDetailsArray) => {
     return walletData
 }
 
-export const getNewTokenData = async (token, member) => {
+export const getNewTokenData = async (address, member) => {
+    let token = address === WBNB_ADDR ? BNB_ADDR : address
     var obj = await getUtilsContract().methods.getTokenDetailsWithMember(token, member).call()
     // var tokenBalance = await getTokenContract(token).methods.balanceOf(address).call()
 
@@ -288,18 +297,18 @@ export const getStake = async (member, token) => {
     let poolAddress = await contract.methods.getPool(token).call()
     let tokenDetails = await contract.methods.getTokenDetails(poolAddress).call()
     let memberData = await contract.methods.getMemberShare(token, member).call()
-    let stakeUnits = await getTokenContract(poolAddress).methods.balanceOf(member).call()
-    let locked = await getDaoContract().methods.mapMemberPool_Balance(member, poolAddress).call()
+    let liquidityUnits = await getTokenContract(poolAddress).methods.balanceOf(member).call()
+    let locked = await getDaoContract().methods.mapMemberPool_balance(member, poolAddress).call()
     let stake = {
         'symbol': tokenDetails.symbol,
         'name': tokenDetails.name,
         'address': token,
-        'poolAddress':poolAddress,
-        'baseAmt': memberData.baseAmt,
-        'tokenAmt': memberData.tokenAmt,
+        'poolAddress': poolAddress,
+        'baseAmount': memberData.baseAmount,
+        'tokenAmount': memberData.tokenAmount,
         'locked': locked,
-        'units': stakeUnits,
-        'share': +stakeUnits / +tokenDetails.totalSupply
+        'units': liquidityUnits,
+        'share': +liquidityUnits / +tokenDetails.totalSupply
     }
     return stake
 }
