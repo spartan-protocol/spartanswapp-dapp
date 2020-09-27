@@ -7,9 +7,8 @@
     "\\src\\ui",
     "\\src\\ui\\components",
     "\\src\\ui\\components\\Header",
-    "\\src\\ui\\layout\\theme",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\ui\\pages\\Swap.js",
+  "SelectedNode": "\\src\\artifacts\\Base.json",
   "PreviewInSolutionExplorer": false
 }
