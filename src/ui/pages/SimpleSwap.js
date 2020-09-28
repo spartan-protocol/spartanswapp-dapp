@@ -9,9 +9,6 @@ import { bn, formatBN, convertFromWei, convertToWei } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
 import { Center } from '../components/elements';
 
-
-
-
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
 
@@ -79,11 +76,11 @@ const SimpleSwap = (props) => {
     const getData = async () => {
         let tokenDetails = await getTokenData(tokenFrom, context.walletData)
         setTokenData(tokenDetails)
-        let poolData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
-        setOutputPool(poolData)       
         let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
-
+        let poolData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
+        setOutputPool(poolData)       
+       
         setSwapData(await getSwapData(tokenAmount, tokenData, outputTokenData, outputPool))
     }
 
@@ -159,20 +156,20 @@ const SimpleSwap = (props) => {
     }
 
 
-    /*________________________________________________OUTPUTS______________________________________________*/
+    /*________________________________________________OUTPUTS_________________________________________________________*/
 
-    const swapResults = (input, poolData) => {
-        var output
-        var slip
+    //const swapResults = (input, poolData) => {
+    //    var output
+    //    var slip
 
-        output = getSwapOutput(input, poolData, false)
-        slip = getSwapSlip(input, poolData, false)
-    }
-
-
+    //    output = getSwapOutput(input, poolData, false)
+    //    slip = getSwapSlip(input, poolData, false)
+    //}
 
 
-    /* ____________________________________STEPS TO SWAP_____________________________________________________ */
+
+
+    /* ______________________________________________STEPS TO SWAP_____________________________________________________ */
        
 
     /* Step 1 */
@@ -203,8 +200,7 @@ const SimpleSwap = (props) => {
         })
        //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
-        setEndTx(true)
-        await reloadData()
+        setEndTx(true)        
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
     }
     /* __________________________________________________________________________________________________ */
@@ -219,14 +215,12 @@ const SimpleSwap = (props) => {
             from: context.walletData.address,
             gasPrice: '',
             gas: '',
-
         })
         //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
     }
-
 
     const Image = () => {
         return (
@@ -244,7 +238,6 @@ const SimpleSwap = (props) => {
     }
 
     return (
-
         <div>
             <Image />
             <div class='outerContainer'>
@@ -271,7 +264,7 @@ const SimpleSwap = (props) => {
                                 <Input placeholder={'Enter BEP2E Asset Address'} onChange={changeOutputToken}></Input>
                                 < br />< br />
                                 <h4>&nbsp; Token: {outputTokenData.symbol}{/*utils.formatEther(swapData.output, { commify: true })*/}</h4>
-                                <h4>&nbsp; Output: {utils.formatEther(outputTokenData.balance)}{/*utils.formatEther(swapData.output, { commify: true })*/} {_swapData.symbol}</h4>
+                                <h4>&nbsp; Output: {/*utils.formatEther(swapData.output, { commify: true })*/}</h4>
                             </div>
                         </Container>
                     </div>
