@@ -5,10 +5,10 @@ import { Context } from '../../context'
 
 import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData } from '../../client/web3'
 import { Input } from 'antd';
-import { bn, formatBN, convertFromWei, convertToWei, formatUSD } from '../../utils'
+import { bn, formatBN, convertFromWei, convertToWei } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
 import { Center } from '../components/elements';
-import { Wallet } from 'ethers'
+
 
 
 
