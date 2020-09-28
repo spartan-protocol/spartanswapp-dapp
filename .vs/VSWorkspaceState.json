@@ -9,6 +9,6 @@
     "\\src\\ui\\components\\Header",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\artifacts\\Base.json",
+  "SelectedNode": "\\src\\utils.js",
   "PreviewInSolutionExplorer": false
 }
