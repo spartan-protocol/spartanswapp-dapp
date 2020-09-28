@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
 
 import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR } from '../../client/web3'
-import { message, Input } from 'antd';
+import { Input } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, formatUSD } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
 import { Center } from '../components/elements';
@@ -20,7 +20,7 @@ const SimpleSwap = (props) => {
     const [message, setMessage] = useState()
 
     const [tokenFrom, setAssetFrom] = useState(SPARTA_ADDR);
-    const [tokenAmount, setTokenAmount] = useState('0')
+    const [tokenAmount, setTokenAmount] = useState(0)
     const [tokenTo, setAssetTo] = useState(BNB_ADDR);
     const [approval, setApproval] = useState(false)
     const [tokenData, setTokenData] = useState({
@@ -36,7 +36,7 @@ const SimpleSwap = (props) => {
         'address': BNB_ADDR
     })
 
-    const [swapData, setSwapData] = useState({
+    const [_swapData, setSwapData] = useState({
         address: SPARTA_ADDR,
         balance: 0,
         input: 0,
@@ -67,7 +67,12 @@ const SimpleSwap = (props) => {
         let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
 
-        setSwapData(getSwapData(tokenAmount, tokenData, outputTokenData, context.poolsData))
+        setSwapData(await getSwapData(tokenAmount, tokenData, outputTokenData, context.poolsData))
+    }
+
+    const onSwapChange = async () => {
+        setSwapData(await getSwapData(tokenAmount, tokenData, outputTokenData, context.poolsData))
+        
     }
 
 
@@ -77,16 +82,16 @@ const SimpleSwap = (props) => {
         checkApproval(e.target.value)
         let tokenDetails = await getTokenData(tokenFrom, context.walletData)
         setTokenData(tokenDetails)
-        setSwapData(getSwapData(tokenAmount, tokenData, outputTokenData, context.poolsData))
-        console.log(swapData)
-        return
+        onSwapChange()
+        console.log(_swapData)
+        
     }
 
     const changeOutputToken = async (e) => {
         setAssetTo(e.target.value)
         let outputToken = await getTokenData(tokenTo, context.walletData)
         setOutputTokenData(outputToken)
-        return
+        onSwapChange()
     }
 
     const getSwapData = async (input, inputTokenData, outputTokenData, poolData) => {
@@ -120,43 +125,59 @@ const SimpleSwap = (props) => {
 
     const setToken = (e) => {
         setTokenAmount(e.target.value)
+        onSwapChange()
     }
 
     /* __________________________________________________________________________________________________ */
 
-    /* Step 1 */
-    const unlock = async () => {
-        let spartaContract = getSpartaContract()
-        await spartaContract.methods.transferFrom(context.walletData.address, tokenAmount).send({
-            from: context.walletData.address,
-            gasPrice: '',
-            gas: ''
-        })
-        message.success(`Transaction Sent!`, 2);
-    }
+    
 
-    /* Step 2 */
+    /* Step 1 */
     const approve = async () => {
         const contract = getTokenContract(tokenFrom)
         const supply = await contract.methods.totalSupply().call()
-        await contract.methods.approve(SPARTA_ADDR, supply).send({
+        await contract.methods.approve(ROUTER_ADDR, supply).send({
             from: context.walletData.address,
             gasPrice: '',
             gas: ''
         })
-        message.success(`Transaction Sent!`, 2);
+        //message.success(`Transaction Sent!`, 2);
     }
 
-    /* Step 3 */
-    const swap = async () => {
+/* Step 2 */
+    /* to send to people */
+    const swapTo = async () => {
         setStartTx(true)
-        let routerContract = getRouterContract()
-        await routerContract.methods.swapTo(swapData.input, tokenFrom, tokenTo).send({
+        let contract = getRouterContract()
+        
+        console.log(tokenAmount, outputTokenData.symbol, _swapData.output, _swapData.slip)
+        await contract.methods.swapTo(tokenAmount, tokenFrom, tokenTo).send({
             from: context.walletData.address,
             gasPrice: '',
-            gas: ''
+            gas: '',
+            
         })
-        message.success(`Transaction Sent!`, 2);
+       //message.success(`Transaction Sent!`, 2);
+        setStartTx(false)
+        setEndTx(true)
+        context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
+    }
+
+    /* to send to self*/
+    const swap = async () => {
+        setStartTx(true)
+        let contract = getRouterContract()
+        let amount = convertToWei(tokenAmount)
+        console.log(tokenAmount)
+        console.log(outputTokenData.symbol, _swapData.output, _swapData.slip)
+
+        
+        await contract.methods.swap(amount, tokenFrom, tokenTo).send({
+            from: context.walletData.address,
+            gasPrice: '',
+            gas: '',            
+        })
+       //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
@@ -205,11 +226,12 @@ const SimpleSwap = (props) => {
                                 <h2>Output</h2>
                                 <Input placeholder={'Enter BEP2E Asset Address'} onChange={changeOutputToken}></Input>
                                 < br />< br />
-                                <h4>&nbsp; Output: {/*utils.formatEther(swapData.output, { commify: true })*/} {swapData.symbol}</h4>
+                                <h4>&nbsp; Token: {outputTokenData.symbol}{/*utils.formatEther(swapData.output, { commify: true })*/}</h4>
+                                <h4>&nbsp; Output: {utils.formatEther(outputTokenData.balance)}{/*utils.formatEther(swapData.output, { commify: true })*/} {_swapData.symbol}</h4>
                             </div>
                         </Container>
                     </div>
-                    <h4>&nbsp; Slippage: {swapData.slip}%</h4>
+                    <h4>&nbsp; Slippage: {_swapData.slip}%</h4>
                 </Container>
                 <br /><br />
                 <div class='centerObject2'>
@@ -217,7 +239,7 @@ const SimpleSwap = (props) => {
                         <p> Please Wait for Metamask to connect</p>}
                     {
                         !approval && context.connected &&
-                        <button1 onClick={unlock}>UNLOCK</button1>
+                        <button1 onClick={approve}>APPROVE</button1>
                     }
                     {
                         approval && !startTx &&
