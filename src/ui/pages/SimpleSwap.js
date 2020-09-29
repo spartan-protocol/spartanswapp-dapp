@@ -3,7 +3,7 @@ import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
 
-import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools } from '../../client/web3'
+import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getTokenSymbol } from '../../client/web3'
 import { message, Input } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, formatUSD } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
@@ -25,7 +25,7 @@ const SimpleSwap = (props) => {
     const [approving, setApproving] = useState(false);
     const [tokenFrom, setAssetFrom] = useState(SPARTA_ADDR);
     const [inputAmount, setinputAmount] = useState('0')
-    const [amountTo, setAmountTo] = useState('0')
+
 
     const [tokenTo, setAssetTo] = useState('0x0000000000000000000000000000000000000000');
     const [approval, setApproval] = useState(false)
@@ -34,6 +34,12 @@ const SimpleSwap = (props) => {
         'name': 'SPARTAN PROTOCOL TOKEN',
         'balance': 0,
         'address': SPARTA_ADDR
+    })
+    const [outTokenData, setOutTokenData] = useState({
+        'symbol': 'BNB',
+        'name': 'BINANCE CHAIN TOKEN',
+        'balance': 0,
+        'address': BNB_ADDR
     })
     const [swapData, setSwapData] = useState({
         'output': 0,
@@ -48,15 +54,7 @@ const SimpleSwap = (props) => {
         outputSymbol: "XXX",
         slip: 0
     })
-    const [sellData, setSellData] = useState({
-        address: BNB_ADDR,
-        balance: 0,
-        input: 0,
-        symbol: "XXX",
-        output: 0,
-        outputSymbol: "XXX",
-        slip: 0
-    })
+
     const [startTx, setStartTx] = useState(false);
     const [endTx, setEndTx] = useState(false);
 
@@ -67,18 +65,15 @@ const SimpleSwap = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [context.connected])
 
-
-
     const getData = async () => {
-        let tokenDetails = await getTokenData(tokenFrom, context.walletData)
-        setTokenData(tokenDetails)
+
+
         let poolsData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
         context.setContext({ 'poolsData': poolsData })
         let poolArray = await getListedPools()
-        context.setContext({'poolArray' : poolArray })
+        context.setContext({ 'poolArray': poolArray })
         let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
-       
     }
 
 
@@ -127,7 +122,7 @@ const SimpleSwap = (props) => {
         console.log(approval)
         if (+approval > 0) {
             setApproval(true)
-            setApproving(false)
+
         }
         else {
             setIsError(true)
@@ -136,38 +131,23 @@ const SimpleSwap = (props) => {
         }
     }
 
-    const inputToken = async (e) => {
-        setAssetFrom(e.target.value)
-    }
 
-    const outputToken = async (e) => {
-        setAssetTo(e.target.value)
-    }
-
-    const inputTokenAmount = async (e) => {
-        setinputAmount(e.target.value)
-    }
-
-    
-    const changeToken = async (e) => {
-        setAssetFrom(e.target.value)
+    const onInputChange = async (e) => {
         setApproval(false)
+        setAssetFrom(e)
+        let token = await getTokenData(e, context.walletData)
+        console.log(token)
+        setTokenData(token)
         checkApproval(tokenFrom)
-        let tokenDetails = await getTokenData(tokenFrom, context.walletData)
-        setTokenData(tokenDetails)
-        //getSwapData calls pools
-        //setSwapData(getSwapData(inputAmount, tokenDetails, tokenTo, context.poolsData))
+    }
 
+    const onOutputChange = async (e) => {
+        setAssetTo(e)
+        let token = await getTokenData(e, context.walletData)
+        console.log(token)
+        setOutTokenData(token)
     }
-    const changeTokenTo = async (e) => {
-        setAssetTo(e.target.value)
-        setApproval(false)
-        checkApproval(tokenTo)
-        let tokenDetails = await getTokenData(tokenTo, context.walletData)
-        setTokenData(tokenDetails)
-        //getSwapData calls pools
-        //setSwapData(getSwapData(inputAmount, tokenDetails, tokenTo, context.poolsData))
-    }
+
 
     const Image = () => {
         return (
@@ -181,22 +161,22 @@ const SimpleSwap = (props) => {
                     <h1>Swap</h1>
                 </div>
             </div>
-
         )
     }
 
+
     return (
-        
-        <div>            
+        <div>
             <Image />
             <div class='outerContainer'>
                 <Container>
                     <div class='container2'>
                         <div class='centerObject2'>
                             <Container>
-                                <h2>Input</h2><Input onChange={changeToken} placeholder={'Enter BEP2E Asset Address'}></Input>
+                                <h2>Input</h2>
+                                <Input onChange={(e) => onInputChange(e.target.value)} placeholder={'Enter BEP2E Asset Address'}></Input>
                                 < br />< br />
-                                <Input placeholder={'0.0'} onChange={inputTokenAmount} ></Input>
+                                <Input placeholder={'0.0'} onChange={(e) => setinputAmount(e)} ></Input>
                                 <h4>&nbsp; Balance: {utils.formatEther(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</h4>
                             </Container>
                         </div>
@@ -210,9 +190,9 @@ const SimpleSwap = (props) => {
                         <Container>
                             <div class='centerObject2'>
                                 <h2>Output</h2>
-                                <Input placeholder={'Enter BEP2E Asset Address'} onChange={changeTokenTo}></Input>
+                                <Input placeholder={'Enter BEP2E Asset Address'} onChange={(e) => onOutputChange(e.target.value)}></Input>
                                 < br />< br />
-                                <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })} {tokenData.symbol}</h4>
+                                <h4>&nbsp; Output: {utils.formatEther(swapData.output, { commify: true })} {outTokenData.symbol}</h4>
                             </div>
                         </Container>
                     </div>
@@ -241,24 +221,5 @@ const SimpleSwap = (props) => {
         </div>
     )
 }
+
 export default SimpleSwap
-
-
-
-
-//const SwapTo = async () => {
-    //    setApproval(false)
-    //    checkApproval(tokenFrom)
-    //    if (approval) {
-    //        setStartTx(true)
-    //        let contract = getSpartaContract()
-    //        await contract.methods.upgrade(tokenTo).send({ from: context.walletData.address, gasPrice: '', gas: '' })
-    //        setStartTx(false)
-    //        setEndTx(true)
-    //        context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
-    //    }
-    //    else {
-    //        setIsError(true)
-    //        setRecipientError("There was a error approving the address account")
-    //    }
-    //}
