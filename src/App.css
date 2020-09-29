@@ -163,7 +163,7 @@ input {
     text-align: center;
 }
 
-Button3 {
+button3 {
     background-color: var(--spartanGrey);
     color: var(--buttonOrange);
     width: 0;
@@ -175,7 +175,7 @@ Button3 {
     text-align: center;
 }
 
-Button2 {
+button2 {
     background-color: var(--buttonOrange);
     color: white;
     width: 150px;
@@ -186,7 +186,7 @@ Button2 {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-Button1 {
+button1 {
     background-color: var(--spartanGrey);
     color: var(--textColor);
     width: 0;
