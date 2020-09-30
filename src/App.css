@@ -123,7 +123,16 @@ h2, h5 {
 h4 {
     font-size: 15px;
     text-align: center;
+}
 
+h6 {
+    font-size: 25px;
+    text-align: center;
+}
+
+wallet {
+    font-size: 25px;
+    text-align: center;
 }
 
 
@@ -224,22 +233,22 @@ header {
     width: 0;
     position: fixed;
     z-index: 1;
-    height: 800px;
+    height: 100%;
     top: 0;
     right: 0;
-    background-color: #e8e8e8;
+    background-color: white;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-    border-radius: 1.25rem;
-    border: 2px solid var(--spartanRed);
+    border-radius: 0;
+    border: 0px solid var(--spartanRed);
 }
 
     .sidepanel a {
         padding: 8px 8px 8px 32px;
         text-decoration: none;
         font-size: 35px;
-        color: #818181;
+        color: white;
         display: block;
         transition: 0.3s;
     }
@@ -254,7 +263,37 @@ header {
         right: 15px;
         font-size: 15px;
     }
+
+.column {
+    text-align: center;
+    margin: auto;
+    float: left;
+    width: 50%;
+    padding: 0px;
+    
+}
+
+.col-container {
+    display: flex; /* Make the container element behave like a table */
+    width: 350px; /* Set full-width to expand the whole page */
+    margin: auto;
+    height: 120px;
+    
+}
+
+.col {
+    display: table-cell; /* Make elements inside the container behave like table cells */
+    text-align: center;
+    margin: auto;
+    width: 20%;
+    height: 20px;
+    padding: 0px;
+    
+}
+
 /* ______________________________________________________*/
+
+
 .flexbox_1 {
     display: flex;
     justify-content: center;
@@ -263,7 +302,7 @@ header {
 .centerObject {
     text-align: center;
     margin: auto;
-    border: 2px solid green;
+    border: 0px solid green;
     width: 100%;
     padding: 30px;
 }

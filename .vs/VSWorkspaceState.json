@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\artifacts",
+    "\\src\\client",
+    "\\src\\ui",
+    "\\src\\ui\\components",
+    "\\src\\ui\\components\\Header",
+    "\\src\\ui\\layout",
+    "\\src\\ui\\pages"
+  ],
+  "PreviewInSolutionExplorer": false
+}
