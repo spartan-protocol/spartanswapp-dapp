@@ -2,10 +2,11 @@
 import '../../App.css'
 import { Context } from '../../context'
 import { CoinRow } from '../components/common'
-import { Table, Drawer } from 'antd'
+import { HR } from '../components/elements'
+import { Table, Drawer, Divider } from 'antd'
 import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools } from '../../client/web3'
 import Web3 from 'web3'
-import { message, Divider } from 'antd';
+
 
 export function openNav() {
     document.getElementById("mySidepanel").style.width = "350px";
@@ -33,7 +34,7 @@ const Sidebar = (props) => {
         window.web3 = new Web3(window.ethereum);
         const account = (await window.web3.eth.getAccounts())[0];
         if (account) {
-           // message.loading('Loading tokens', 3);
+            // message.loading('Loading tokens', 3);
             let assetArray = context.assetArray ? context.assetArray : await getAssets()
             context.setContext({ 'assetArray': assetArray })
             //let assetDetailsArray = context.assetDetailsArray ? context.assetDetailsArray : await getTokenDetails(account, assetArray)
@@ -108,6 +109,7 @@ const Sidebar = (props) => {
             {
                 render: (record) => (
                     <div>
+                        
                         <CoinRow
                             symbol={record.symbol}
                             name={record.name}
@@ -115,6 +117,7 @@ const Sidebar = (props) => {
                             address={record.address}
                             size={40} />
                         <br />
+                       
                     </div>
                 )
             }
@@ -122,7 +125,7 @@ const Sidebar = (props) => {
 
         return (
             <div>
-                <Table 
+                <Table
                     dataSource={context.walletData.tokens}
                     showHeader={false}
                     pagination={false}
@@ -137,20 +140,18 @@ const Sidebar = (props) => {
         <div id="mySidepanel" class="sidepanel">
             <div>
                 <button class='closebtn' onClick={closeNav}>X</button>
-                <div class='centerObject'>
-                    <h1>Your Tokens</h1>
-                    
-                    <br /> <br />
-
-                    {connected && <AssetTable />}
-                   
-                    </div>
+                <h4>{connected && context.walletData.address}</h4>
+                <HR> </HR> 
+                <div class='centerObject2'>
+                <p>Tokens</p>
+                </div>
+                {connected && <AssetTable />}
+                               
             </div>
         </div>
     )
 }
 
 export default Sidebar
-
 
 

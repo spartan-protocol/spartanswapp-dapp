@@ -7,8 +7,8 @@
     "\\src\\ui",
     "\\src\\ui\\components",
     "\\src\\ui\\components\\Header",
+    "\\src\\ui\\layout",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\utils.js",
   "PreviewInSolutionExplorer": false
 }
