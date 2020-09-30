@@ -1,6 +1,7 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
     "\\src",
     "\\src\\artifacts",
     "\\src\\client",
@@ -10,5 +11,6 @@
     "\\src\\ui\\layout",
     "\\src\\ui\\pages"
   ],
+  "SelectedNode": "\\src\\ui\\pages\\SimpleSwap.js",
   "PreviewInSolutionExplorer": false
 }
