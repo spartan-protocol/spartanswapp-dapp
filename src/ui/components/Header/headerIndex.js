@@ -11,6 +11,7 @@ import TokenSidebar, { openBar, closeBar } from '../../layout/TokenSidebar'
 import spinner from '../../../assets/images/spinner.svg' 
 import { SpinnerWrapper } from '../../layout/theme';
 import { CheckOutlined } from '@ant-design/icons'
+import { Button } from '../elements'
 
 const { Header } = Layout;
 
@@ -107,16 +108,16 @@ const Headbar = (props) => {
                         </HeaderElement>
                         <HeaderElement>
                             {!connected && !connecting &&
-                                <button2 onClick={connectWallet}>CONNECT</button2>
+                                <Button onClick={connectWallet}>CONNECT</Button>
                             }
                             {connecting &&
                                 <SpinnerWrapper src={spinner} />
                             }
                             {connecting &&
-                                <button2>CONNECTING</button2>
+                                <Button>CONNECTING</Button>
                             }   
                             {connected &&
-                                <button2 onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</button2>
+                                <Button onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</Button>
                             }
                         </HeaderElement>
                     </HeaderSpan>
