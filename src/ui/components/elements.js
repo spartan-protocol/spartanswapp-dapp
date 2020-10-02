@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button as AntButton } from "antd"
+import { UnorderedListOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 export const Colour = (alpha) => {
     var colour
@@ -29,7 +30,7 @@ export const H1 = (props) => {
     //styles.fontColour = '#FFFFFF'
     styles.fontWeight = "bold"
     styles.color = Colour().red
-
+    
     if (props.margin) {
         styles.margin = props.margin
     }
@@ -47,8 +48,9 @@ export const H2 = (props) => {
     let styles = { ...props.style || {} }
     styles.fontSize = "20px"
     styles.fontWeight = "bold"
-    styles.color = Colour().grey
+    styles.color = Colour().red
     styles.margin = "20px 0px"
+    
 
     if (props.margin) {
         styles.margin = props.margin
@@ -104,6 +106,27 @@ export const LabelGrey = (props) => {
     styles.fontSize = "16px"
     styles.fontWeight = "bold"
     styles.color = Colour().lgrey
+    styles.margin = "20px 0px"
+
+    if (props.margin) {
+        styles.margin = props.margin
+    }
+    if (props.size) {
+        styles.fontSize = props.size
+    }
+
+    return (
+        <span style={styles}>
+            {props.children}
+        </span>
+    )
+}
+
+export const LabelWhite = (props) => {
+    let styles = { ...props.style || {} }
+    styles.fontSize = "16px"
+    styles.fontWeight = "bold"
+    styles.color = Colour().white
     styles.margin = "20px 0px"
 
     if (props.margin) {
@@ -179,7 +202,7 @@ export const Text = (props) => {
 export const P = (props) => {
     let styles = { ...props.style || {} }
     styles.fontSize = "10px"
-    styles.color = Colour().black
+    styles.color = Colour().white
     styles.display = "block"
     styles.fontWeight = "bold"
 

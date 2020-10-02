@@ -49,8 +49,6 @@
 }
 
 
-
-
 @font-face {
     font-family: 'Spartan';
     src: local('Spartan'), url(./assets/font/Spartan-Regular.ttf) format('truetype');
@@ -59,30 +57,6 @@
 * {
     box-sizing: border-box;
 }
-
-body {
-    margin: 0;
-    padding: 0;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.box {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: auto;
-    margin-top: auto;
-}
-
-.border {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: auto;
-    margin-top: auto;
-}
-
 
 ul li {
     font-family: 'Spartan', sans-serif;
@@ -95,34 +69,13 @@ p, label, a, b, i {
     font-size: 20px;
 }
 
-h1 {
-    font-family: "Spartan",sans-serif;
-    font-size: 40px;
-    color: var(--spartanRed);
-    font-weight: 700;
-}
-
-h2 {
-    font-family: "Spartan",sans-serif;
-    font-size: 40px;
-    color: var(--spartanRed);
-    font-weight: 700;
-
-}
-
-
-
-h3, h4, h5 {
+H1, H2, h3, h4, h5,
+button, Label, LabelWhite  {
     font-family: 'Spartan', sans-serif;
 }
 
-h2, h5 {
-    font-size: 25px;
-}
-
-h4 {
+h3 {
     font-size: 15px;
-    text-align: center;
 }
 
 h6 {
@@ -149,10 +102,10 @@ wallet {
     color: var(--textColor);
     background-color: var(--pageBackground);
     margin: auto;
-    width: 500px;
+    width: 600px;
     border-radius: 2rem;
     border: 0px solid #292C2F;
-    //box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   
     /*box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.5), 0 6px 20px 0 rgba(255, 255, 255, 0.19);*/
 }
 
@@ -160,16 +113,11 @@ wallet {
     color: var(--textColor);
     background-color: var(--spartanGrey);
     margin: 15px;
+    height: 200px;
     border-radius: 2rem;
     border: 0.5px solid #292C2F;
+    text-align: left;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-}
-
-input {
-    width: 200px;
-    height: 30px;
-    border-radius: 0.5rem;
-    text-align: center;
 }
 
 button3 {
@@ -208,7 +156,6 @@ button1 {
 }
 
 
-
 footer {
     width: 100%;
     min-height: 40px;
@@ -239,18 +186,19 @@ header {
     background-color: white;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding-top: 30px;
     border-radius: 0;
-    border: 0px solid var(--spartanRed);
+    
 }
 
     .sidepanel a {
         padding: 8px 8px 8px 32px;
         text-decoration: none;
-        font-size: 35px;
+        font-size: 40px;
         color: white;
         display: block;
         transition: 0.3s;
+       
     }
 
         .sidepanel a:hover {
@@ -261,16 +209,16 @@ header {
         position: absolute;
         top: 10px;
         right: 15px;
-        font-size: 15px;
+        font-size: 10px;
     }
-
+    /*_____________________________________________*/
 .column {
+    
     text-align: center;
     margin: auto;
     float: left;
     width: 50%;
-    padding: 0px;
-    
+    padding: 0px;  
 }
 
 .col-container {
@@ -286,9 +234,8 @@ header {
     text-align: center;
     margin: auto;
     width: 20%;
-    height: 20px;
-    padding: 0px;
-    
+    height: 0px;
+    padding: 0px;    
 }
 
 /* ______________________________________________________*/
@@ -299,24 +246,53 @@ header {
     justify-content: center;
 }
 
-.centerObject {
-    text-align: center;
-    margin: auto;
-    border: 0px solid green;
-    width: 100%;
-    padding: 30px;
-}
-
 .centerObject2 {
     text-align: center;
     margin: auto;
-   
+    
 }
 
-walletTable {
-    width: 100px;
-    text-align: center;
+
+/*___________________________address Modal_________________________________*/
+.modal {
+   /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 35%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
     margin: auto;
+    padding: 20px;
+    border: 1px solid #292C2F;
+    width: 60%;
+    height: 60%;
+    border-radius: 2rem;
 }
 
-/* Dropdown Button */
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ____________________________________________________________________________*/
+
