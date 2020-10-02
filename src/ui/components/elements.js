@@ -40,7 +40,6 @@ export const H1 = (props) => {
             <span style={styles}>{props.children}</span>
             <br />
         </>
-
     )
 }
 
@@ -49,8 +48,24 @@ export const H2 = (props) => {
     styles.fontSize = "20px"
     styles.fontWeight = "bold"
     styles.color = Colour().red
+    styles.margin = "20px 0px"    
+
+    if (props.margin) {
+        styles.margin = props.margin
+    }
+    return (
+        <span style={styles}>
+            {props.children}
+        </span>
+    )
+}
+
+export const H3 = (props) => {
+    let styles = { ...props.style || {} }
+    styles.fontSize = "15px"    
+    styles.color = Colour().black
     styles.margin = "20px 0px"
-    
+
 
     if (props.margin) {
         styles.margin = props.margin
@@ -201,7 +216,7 @@ export const Text = (props) => {
 
 export const P = (props) => {
     let styles = { ...props.style || {} }
-    styles.fontSize = "10px"
+    styles.fontSize = "12px"
     styles.color = Colour().white
     styles.display = "block"
     styles.fontWeight = "bold"

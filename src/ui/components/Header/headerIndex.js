@@ -108,16 +108,16 @@ const Headbar = (props) => {
                         </HeaderElement>
                         <HeaderElement>
                             {!connected && !connecting &&
-                                <Button onClick={connectWallet}>CONNECT</Button>
+                                <Button style={{width: 150}}onClick={connectWallet}>CONNECT</Button>
                             }
                             {connecting &&
                                 <SpinnerWrapper src={spinner} />
                             }
                             {connecting &&
-                                <Button>CONNECTING</Button>
+                                <Button style={{ width: 150 }}>CONNECTING</Button>
                             }   
                             {connected &&
-                                <Button onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</Button>
+                                <Button style={{ width: 150 }} onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</Button>
                             }
                         </HeaderElement>
                     </HeaderSpan>

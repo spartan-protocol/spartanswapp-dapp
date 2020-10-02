@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import '../../App.css'
 import { Context } from '../../context'
 import { CoinRow, TokenSidebar } from '../components/common'
-import { HR } from '../components/elements'
+import { HR, H1, H3, Center } from '../components/elements'
 import { Table, Drawer, Divider, Tabs, Input } from 'antd'
 import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools } from '../../client/web3'
 import Web3 from 'web3'
@@ -165,14 +165,28 @@ const Sidebar = (props) => {
         )
     }
 
+    const Content = () => {
+        return (
+            <div>
+                <H1>Transaction Summary</H1>
+                <H3>Input</H3>
+                <p>Token: </p>
+                <p>Amount: </p>
+                <br />
+                <p>Output</p>
+                <p>Token: </p>
+                <p>Amount </p>
+            </div>
+        )
+    }
+
     return (
         <div id="TokenSidepanel" class="sidepanel2">
             <div>
                 <button class='closebtn' onClick={closeBar}>X</button>
                 <div class='centerObject2'>
                     <p>Avaliable Tokens</p>
-
-                    <Tabs defaultActiveKey="1" onChange={callback} centered type="line">
+                    <Tabs defaultActiveKey="1" onChange={callback} centered="true" type="line" size="large">
                         <TabPane tab="INPUT" key="1">
                             <div>
                                 {connected && <InputTable />}
@@ -182,7 +196,7 @@ const Sidebar = (props) => {
                             <div>
                                 {connected && <OutputTable />}
                             </div>
-                        </TabPane>
+                        </TabPane>                        
                     </Tabs>
                 </div>
 

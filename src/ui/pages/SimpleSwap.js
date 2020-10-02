@@ -7,7 +7,7 @@ import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDet
 import { Input, Dropdown, message } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei } from '../../utils'
 import { getSwapOutput, getSwapSlip } from '../../math'
-import { Center, Button, H1, H2, LabelWhite } from '../components/elements';
+import { Center, Button, H1, H2, LabelWhite, P } from '../components/elements';
 import 'antd/dist/antd.css'
 import { openBar } from '../layout/TokenSidebar'
 //import { openAddress, AddressModal, closeAddress } from '../layout/AddressModal'
@@ -100,7 +100,7 @@ const SimpleSwap = (props) => {
         var output; var slip
         output = getSwapOutput(input, poolData, false)
         slip = getSwapSlip(input, poolData, false)
-        console.log(formatBN(output), formatBN(slip))
+      
 
         const swapData = {
             address: poolData.address,
@@ -229,9 +229,13 @@ const SimpleSwap = (props) => {
                                 <div>
                                     <Input onChange={(e) => onInputChange(e.target.value)} placeholder={'Enter BEP2E Asset Address'} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
                                     < br />
-                                    <Input placeholder={'0.0'} onChange={(e) => onInputAmountChange(e.target.value)} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
+                                    <Input
+                                        placeholder={'0.0'}
+                                        onChange={(e) => onInputAmountChange(e.target.value)}
+                                        style={{ width: 350 }}>
+                                    </Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
                                     < br />
-                                    <LabelWhite>Balance: {convertFromWei(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</LabelWhite>
+                                    <P>Balance: {convertFromWei(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</P>
                                     < br />
                                 </div>
                             </Container>
@@ -249,9 +253,9 @@ const SimpleSwap = (props) => {
                                 <div>
                                     <Input placeholder={'Enter BEP2E Asset Address'} onChange={(e) => onOutputChange(e.target.value)} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
                                 < br />< br />
-                                    <LabelWhite>Output: {/*utils.formatEther(swapData.output, { commify: true })*/}{outTokenData.symbol}</LabelWhite>
+                                    <P>Output: {/*utils.formatEther(swapData.output, { commify: true })*/}{outTokenData.symbol}</P>
                                     <br />
-                                    <LabelWhite>Slippage: {_swapData.slip}%</LabelWhite>
+                                    <P>Slippage: {_swapData.slip}%</P>
                                     <br />
                                 </div>                            
                             </Container>
@@ -265,15 +269,15 @@ const SimpleSwap = (props) => {
                         <p> Please Wait for Metamask to connect</p>}
                     {
                         !approval && context.connected &&
-                        <Button style={{ width: 200}} onClick={approve}>APPROVE</Button>
+                        <Button style={{ width: 150 }} onClick={approve}>APPROVE</Button>
                     }
                     {
                         approval && !startTx &&
-                        <Button onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
                     }
                 </div>
             </div>

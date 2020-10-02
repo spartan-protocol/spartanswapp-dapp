@@ -415,7 +415,7 @@ export const CoinRow = (props) => {
 
     return (
 
-        <div>           
+        <div>
             <div class='col-container'>
                 <div class='column'>
                     <div class='col'>
@@ -430,11 +430,11 @@ export const CoinRow = (props) => {
                 <div class='column'>
                     <div class='col'>
                         <span><Label size={props.size / 2.2}>{props.name}</Label> <br /><br /></span>
-                        <span><Text size={props.size / 2}>{convertFromWei(props.balance)}</Text></span >                        
+                        <span><Text size={props.size / 2}>{convertFromWei(props.balance)}</Text></span >
                     </div>
                 </div>
             </div>
-            
+
         </div>
     )
 }
@@ -450,20 +450,16 @@ export const TokenSidebar = (props) => {
     return (
 
         <div>
-            <div class='col-container'>
-                <div class='column'>
-                    <div class='col'>
-                        {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
-                        {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
-                        {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
-                        {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
-                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' /><br /></>}
-                        <Label size={props.size / 1.8}>{props.symbol}</Label><br />
-                        <span><Label size={props.size / 2.2}>{props.name}</Label> <br /></span>
-                    </div>
-                </div>               
+            <div class='col2'>
+                {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
+                {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
+                {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
+                {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
+                {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' /><br /></>}
+                <Label size={props.size / 1.8}>{props.symbol}</Label><br />
+                <span><Label size={props.size / 2.2}>{props.name}</Label> </span><br />
+                <h3>{props.address}</h3>
             </div>
-            <h3>Address: {props.address}</h3>
         </div>
     )
 }

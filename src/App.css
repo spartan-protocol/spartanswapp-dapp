@@ -228,6 +228,16 @@ header {
     padding: 0px;    
 }
 
+
+.col2 {
+    display: table-cell; /* Make elements inside the container behave like table cells */
+    text-align: center;
+    margin: auto;
+    width: 20%;
+    height: 0px;
+    padding: 0px;   
+}
+
 /* ______________________________________________________*/
 
 
