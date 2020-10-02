@@ -58,16 +58,6 @@
     box-sizing: border-box;
 }
 
-ul li {
-    font-family: 'Spartan', sans-serif;
-    font-size: 20px;
-    line-height: 2;
-}
-
-p, label, a, b, i {
-    font-family: 'Spartan', sans-serif;
-    font-size: 20px;
-}
 
 H1, H2, h3, h4, h5,
 button, Label, LabelWhite  {

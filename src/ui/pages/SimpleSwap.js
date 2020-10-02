@@ -218,7 +218,7 @@ const SimpleSwap = (props) => {
 
     return (
         <div>
-            <Image />< br />< br />
+            <Image />
             <div class='outerContainer'>
                 <Container>
                     <div class='container2'>
