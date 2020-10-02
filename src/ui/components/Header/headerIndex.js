@@ -7,6 +7,7 @@ import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesDa
 import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from './headerStyles'
 import '../../../App.css'
 import Sidebar, { openNav, closeNav } from '../../layout/Sidebar'
+import TokenSidebar, { openBar, closeBar } from '../../layout/TokenSidebar'
 import spinner from '../../../assets/images/spinner.svg' 
 import { SpinnerWrapper } from '../../layout/theme';
 import { CheckOutlined } from '@ant-design/icons'
@@ -122,6 +123,7 @@ const Headbar = (props) => {
                 </MigrateBannerLarge>
             </HeaderFrame>
             <Sidebar />
+            <TokenSidebar />
         </div>
     )
 }

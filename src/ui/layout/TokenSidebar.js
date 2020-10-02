@@ -1,19 +1,26 @@
-﻿import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../../App.css'
 import { Context } from '../../context'
-import { CoinRow } from '../components/common'
+import { CoinRow, TokenSidebar } from '../components/common'
 import { HR } from '../components/elements'
-import { Table, Drawer, Divider } from 'antd'
+import { Table, Drawer, Divider, Tabs, Input } from 'antd'
 import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools } from '../../client/web3'
 import Web3 from 'web3'
+import '../components/StyleSheets/Sidebar2.css'
 
 
-export function openNav() {
-    document.getElementById("mySidepanel").style.width = "370px";
+const { TabPane } = Tabs;
+
+export function openBar() {
+    document.getElementById("TokenSidepanel").style.width = "370px";
 }
 
-export function closeNav() {
-    document.getElementById("mySidepanel").style.width = "0";
+export function closeBar() {
+    document.getElementById("TokenSidepanel").style.width = "0";
+}
+
+function callback(key) {
+    console.log(key);
 }
 
 const Sidebar = (props) => {
@@ -92,28 +99,21 @@ const Sidebar = (props) => {
     }
 
 
-    const AssetTable = () => {
-
+    const InputTable = () => {
         const context = useContext(Context)
         useEffect(() => {
             // updateWallet()
 
         }, [context.transaction])
 
-        // const updateWallet = async () => {
-        //     context.setContext({ walletData: await getWalletData(context.poolArray) })
-        // }
-
         const columns = [
             {
                 render: (record) => (
-                    <div>                        
-                        <CoinRow
+                    <div>
+                        <TokenSidebar
                             symbol={record.symbol}
-                            name={record.name}
-                            balance={record.balance}
                             address={record.address}
-                            size={35} />                                               
+                            size={30} />
                     </div>
                 )
             }
@@ -131,15 +131,61 @@ const Sidebar = (props) => {
         )
     }
 
-    return (
-        <div id="mySidepanel" class="sidepanel">
+    const OutputTable = () => {
+        const context = useContext(Context)
+
+        useEffect(() => {
+            // updateWallet()
+
+        }, [context.transaction])
+
+        const columns = [
+            {
+                render: (record) => (
+                    <div>
+                        <TokenSidebar
+                            symbol={record.symbol}
+                            address={record.address}
+                            name={record.name}
+                            size={30} />
+                    </div>
+                )
+            }
+        ]
+
+        return (
             <div>
-                <button class='closebtn' onClick={closeNav}>X</button>               
+                <Table
+                    dataSource={context.poolData}
+                    showHeader={false}
+                    pagination={false}
+                    columns={columns}
+                    rowKey="symbol" />
+            </div>
+        )
+    }
+
+    return (
+        <div id="TokenSidepanel" class="sidepanel2">
+            <div>
+                <button class='closebtn' onClick={closeBar}>X</button>
                 <div class='centerObject2'>
-                    <p>Tokens</p>
-                    <h4>{connected && context.walletData.address}</h4>
-                </div>               
-                {connected && <AssetTable />}                 
+                    <p>Avaliable Tokens</p>
+
+                    <Tabs defaultActiveKey="1" onChange={callback} centered type="line">
+                        <TabPane tab="INPUT" key="1">
+                            <div>
+                                {connected && <InputTable />}
+                            </div>
+                        </TabPane>
+                        <TabPane tab="OUTPUT" key="2">
+                            <div>
+                                {connected && <OutputTable />}
+                            </div>
+                        </TabPane>
+                    </Tabs>
+                </div>
+
             </div>
         </div>
     )
