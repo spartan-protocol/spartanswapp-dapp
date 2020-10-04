@@ -41,7 +41,7 @@ const BodyWrapper = styled.div`
   overflow: auto;
   min-height: 10vh;
   background-position: 0px 0vh;
-  background-color: #050303;
+  background-color: #0a0001;
   background-repeat: no-repeat;
 }
 `
@@ -63,7 +63,7 @@ const App = () => {
                                 </Switch>
                             </Body>
                         </BodyWrapper>
-                        <footer />
+                        
                     </AppWrapper>
                 </ContextProvider>
             </div>

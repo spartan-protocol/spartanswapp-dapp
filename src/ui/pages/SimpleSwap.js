@@ -3,13 +3,14 @@ import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
 import { MenuOutlined } from '@ant-design/icons'
-import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool } from '../../client/web3'
-import { Input, Dropdown, message } from 'antd';
+import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData } from '../../client/web3'
+import { Input, Dropdown } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei } from '../../utils'
-import { getSwapOutput, getSwapSlip } from '../../math'
-import { Center, Button, H1, H2, LabelWhite } from '../components/elements';
+import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
+import { Center, Button, H1, H2, LabelWhite, P, message } from '../components/elements';
 import 'antd/dist/antd.css'
 import { openBar } from '../layout/TokenSidebar'
+import App from '../../App'
 //import { openAddress, AddressModal, closeAddress } from '../layout/AddressModal'
 //import '../../App.css'
 
@@ -21,10 +22,22 @@ const SimpleSwap = (props) => {
     const context = useContext(Context)
     const [message, setMessage] = useState()
 
-    const [tokenFrom, setAssetFrom] = useState(SPARTA_ADDR);
-    const [tokenTo, setAssetTo] = useState(BNB_ADDR);
+    const [AddressFrom, setAssetFrom] = useState(SPARTA_ADDR);
+    const [AddressTo, setAssetTo] = useState(BNB_ADDR);
     const [inputAmount, setinputAmount] = useState('0')
-    const [outputPool, setOutputPool] = useState({
+
+    const [swapData, setSwapData] = useState({
+        'address': BNB_ADDR,
+        'balance': 0,
+        'input': 0,
+        'inputSymbol': 'XXX',
+        'output': 0,
+        'outputSymbol': 'XXX',
+        'slip': 0
+    })
+
+
+    const [pool, setPool] = useState({
         'symbol': 'XXX',
         'name': 'XXX',
         'address': BNB_ADDR,
@@ -38,33 +51,24 @@ const SimpleSwap = (props) => {
         'units': 0,
         'fees': 0
     })
-    const [outTokenData, setOutTokenData] = useState({
-        'symbol': 'BNB',
-        'name': 'BINANCE CHAIN TOKEN',
-        'balance': 0,
-        'address': BNB_ADDR
-    })
 
-    const [approval, setApproval] = useState(false)
+/*___________________Token Data_____________________________ */
 
-
-    const [tokenData, setTokenData] = useState({
+    const [inputTokenData, setInputTokenData] = useState({
         'symbol': 'SPARTA',
         'name': 'SPARTAN PROTOCOL TOKEN',
         'balance': 0,
         'address': SPARTA_ADDR
     })
-
-    const [_swapData, setSwapData] = useState({
-        address: SPARTA_ADDR,
-        balance: 0,
-        input: 0,
-        symbol: "XXX",
-        output: 0,
-        outputSymbol: "XXX",
-        slip: 0
+    const [outputTokenData, setOutputTokenData] = useState({
+        'symbol': 'BNB',
+        'name': 'BINANCE CHAIN TOKEN',
+        'balance': 0,
+        'address': BNB_ADDR
     })
+/*_________________________________________________________________*/
 
+    const [approval, setApproval] = useState(false)
     const [startTx, setStartTx] = useState(false);
     const [endTx, setEndTx] = useState(false);
 
@@ -79,46 +83,39 @@ const SimpleSwap = (props) => {
 
 
     const getData = async () => {
-        let tokenDetails = await getTokenData(tokenFrom, context.walletData)
-        setTokenData(tokenDetails)
-        let tokenArray = context.tokenArray ? context.tokenArray : await getListedTokens()
+        let tokenDetails = await getTokenData(AddressFrom, context.walletData)
+        setInputTokenData(tokenDetails)
+        let tokenArray = await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
-        let poolData = context.poolsData ? context.poolsData : await getPoolsData(tokenArray)
-        setOutputPool(poolData)
-        context.setContext({ 'poolData': poolData })
-        let listedPools = await getListedPools()
-        console.log("Listed Pools " + listedPools)
-        setSwapData(await getSwapData(inputAmount, tokenData, outTokenData, poolData))
+        let poolArray = await getListedPools()
+        context.setContext({ 'poolArray': poolArray })
+        context.setContext({ 'poolsData': await getPoolsData(tokenArray) })
+        setPool(getPoolData(AddressTo, context.poolsData))
     }
 
-    const onSwapChange = async () => {
-        setSwapData(await getSwapData(inputAmount, tokenData, outTokenData, outputPool))
-    }
+    const getSwapData = async (inputAmount, inputTokenData, outputTokenData, pool) => {
 
-    const getSwapData = async (input, inputTokenData, outTokenData, poolData) => {
+        let _output
+        let _slip
+        _output = getSwapOutput(inputAmount, pool, false)
+        _slip = getSwapSlip(inputAmount, pool, false)
 
-        var output; var slip
-        output = getSwapOutput(input, poolData, false)
-        slip = getSwapSlip(input, poolData, false)
-        console.log(formatBN(output), formatBN(slip))
-
-        const swapData = {
-            address: poolData.address,
+        const _swapData = {
+            address: pool.address,
             balance: inputTokenData.balance,
-            input: formatBN(bn(input), 0),
+            input: formatBN(bn(inputAmount), 0),
             inputSymbol: inputTokenData.symbol,
-            output: formatBN(output, 0),
-            outputSymbol: outTokenData.symbol,
-            slip: formatBN(slip)
+            output: formatBN(_output, 0),
+            outputSymbol: outputTokenData.symbol,
+            slip: formatBN(_slip)
         }
-        console.log(swapData)
-        return swapData
+        console.log(_swapData)
+        return _swapData
     }
 
     const checkApproval = async (address) => {
         const contract = getTokenContract(address)
         const approval = await contract.methods.allowance(context.walletData.address, ROUTER_ADDR).call()
-        console.log(approval)
         if (+approval > 0) {
             setApproval(true)
         }
@@ -130,49 +127,61 @@ const SimpleSwap = (props) => {
     /* ______________________________________________INPUTS __________________________________________________________ */
 
     const onInputChange = async (e) => {
-        setApproval(false)
-        setAssetFrom(e)
-        console.log(e)
-        let token = await getTokenData(e, context.walletData)
-        console.log(token)
-        setTokenData(token)
-        checkApproval(tokenFrom)
-        onSwapChange()
+        try {
+            setApproval(false)
+            setAssetFrom(e)
+            let token = await getTokenData(e, context.walletData)
+            console.log(token)
+            setInputTokenData(token)
+            checkApproval(AddressFrom)
+            setSwapData(await getSwapData(inputAmount, inputTokenData, outputTokenData, pool))            
+        }
+        catch (err) {
+            console.log(err)
+        }        
     }
 
     const onInputAmountChange = async (e) => {
-        setinputAmount(e)
-        onSwapChange()
+        try {
+            setinputAmount(e)
+            console.log(inputAmount)            
+        }
+        catch (err) {
+            console.log(err)
+        }        
     }
-
 
     /*________________________________________________OUTPUTS_________________________________________________________*/
 
-
     const onOutputChange = async (e) => {
-        setAssetTo(e)
-        let token = await getTokenData(e, context.walletData)
-        console.log(token)
-        setOutTokenData(token)
-        let pool = getPool(tokenTo)
-        setOutputPool(pool)
-        onSwapChange()
+        try {
+            setAssetTo(e)
+            let token = await getTokenData(e, context.walletData)
+            setOutputTokenData(token)
+            let _pool = await getPool(AddressTo)
+            setPool(_pool)
+            setSwapData(await getSwapData(inputAmount, inputTokenData, outputTokenData, pool))
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
+
+    
 
     /* ______________________________________________STEPS TO SWAP_____________________________________________________ */
 
-
     /* Step 1 */
     const approve = async () => {
-        checkApproval(tokenTo)
-        const contract = getTokenContract(tokenFrom)
+        checkApproval(AddressTo)
+        const contract = getTokenContract(AddressFrom)
         const supply = await contract.methods.totalSupply().call()
         await contract.methods.approve(ROUTER_ADDR, supply).send({
             from: context.walletData.address,
             gasPrice: '',
             gas: ''
         })
-        message.success(`Transaction Sent!`, 2);
+        //message.success(`Transaction Sent!`, 2);
     }
 
     /* Step 2 */
@@ -181,14 +190,14 @@ const SimpleSwap = (props) => {
         setStartTx(true)
         let contract = getRouterContract()
         let amount = convertToWei(inputAmount)
-        console.log(_swapData)
+        //console.log(swapInfo)
 
-        await contract.methods.swap(amount, tokenFrom, tokenTo).send({
+        await contract.methods.swap(amount, AddressFrom, AddressTo).send({
             from: context.walletData.address,
             gasPrice: '',
             gas: '',
         })
-        message.success(`Transaction Sent!`, 2);
+        //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
@@ -204,7 +213,7 @@ const SimpleSwap = (props) => {
                     <img src='favicon.png' />
                     <br /><br />
                 </Center>
-                <div class='centerObject2'>
+                <div className='centerObject2'>
                     <H1>Swap</H1>
                 </div>
             </div>
@@ -212,72 +221,86 @@ const SimpleSwap = (props) => {
     }
 
     const setMaxBalance = () => {
-        let maxBalance = tokenData.balance
+        let maxBalance = inputTokenData.balance
         onInputAmountChange(maxBalance)
     }
 
     return (
         <div>
-            <Image />
-            <div class='outerContainer'>
+            <div className='outerContainer'>
                 <Container>
-                    <div class='container2'>
+                    <br />
+                    <div className='centerObject2'>
+                        <H1>Swap</H1>
+                    </div>
+                    <div className='container2'>
                         <Center>
                             <Container>
                                 < br />
                                 <H2>Input</H2>
                                 <div>
-                                    <Input onChange={(e) => onInputChange(e.target.value)} placeholder={'Enter BEP2E Asset Address'} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
+                                    <Input
+                                        onChange={(e) => onInputChange(e.target.value)}
+                                        placeholder={'Enter BEP2E Asset Address'}
+                                        style={{ width: 400 }}></Input>
+                                    <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
                                     < br />
-                                    <Input placeholder={'0.0'} onChange={(e) => onInputAmountChange(e.target.value)} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
+                                    <Input
+                                        placeholder={'0.0'}
+                                        onChange={(e) => onInputAmountChange(e.target.value)}
+                                        style={{ width: 400 }}>
+                                    </Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
                                     < br />
-                                    <LabelWhite>Balance: {convertFromWei(tokenData?.balance, { commify: true })}&nbsp; {tokenData.symbol}</LabelWhite>
+                                    <P>Balance: {convertFromWei(inputTokenData.balance)} &nbsp; {inputTokenData.symbol}</P>
                                     < br />
                                 </div>
                             </Container>
                         </Center>
                     </div>
-                    <div class='arrow'>
+                    <div className='arrow'>
                         <SVGArrowDown />
                     </div>
                     <br />
-                    <div class='container2'>
+                    <div className='container2'>
                         <Center>
-                        <Container>
+                            <Container>
                                 < br />
                                 <H2>Output</H2><br />
                                 <div>
-                                    <Input placeholder={'Enter BEP2E Asset Address'} onChange={(e) => onOutputChange(e.target.value)} style={{ width: 350 }}></Input><Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
-                                < br />< br />
-                                    <LabelWhite>Output: {/*utils.formatEther(swapData.output, { commify: true })*/}{outTokenData.symbol}</LabelWhite>
-                                    <br />
-                                    <LabelWhite>Slippage: {_swapData.slip}%</LabelWhite>
-                                    <br />
-                                </div>                            
+                                    <Input
+                                        placeholder={'Enter BEP2E Asset Address'}
+                                        onChange={(e) => onOutputChange(e.target.value)}
+                                        style={{ width: 400 }}></Input>
+                                    <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
+                                    < br />
+                                    <P>Output: </P>                                    
+                                </div>
                             </Container>
                         </Center>
                     </div>
-                    
-                </Container>
-                <br />
-                <div class='centerObject2'>
+                </Container>                
+                <div className='centerObject2'>                    
+                    <P>Slippage: </P> 
+                    <P>Fee: </P>
+                    <br />
                     {!context.connected &&
                         <p> Please Wait for Metamask to connect</p>}
                     {
                         !approval && context.connected &&
-                        <Button style={{ width: 200}} onClick={approve}>APPROVE</Button>
+                        <Button style={{ width: 150 }} onClick={approve}>APPROVE</Button>
                     }
                     {
                         approval && !startTx &&
-                        <Button onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
                     }
+                    <br /><br />
                 </div>
             </div>
-            <br /><br /><br /><br /><br />
+            <br /><br /><br />
         </div>
     )
 }
