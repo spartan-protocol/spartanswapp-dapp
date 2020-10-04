@@ -132,10 +132,10 @@ const Sidebar = (props) => {
     }
 
     return (
-        <div id="mySidepanel" class="sidepanel">
+        <div id="mySidepanel" className="sidepanel">
             <div>
-                <button class='closebtn' onClick={closeNav}>X</button>               
-                <div class='centerObject2'>
+                <button className='closebtn' onClick={closeNav}>X</button>               
+                <div className='centerObject2'>
                     <p>Tokens</p>
                     <h4>{connected && context.walletData.address}</h4>
                 </div>               

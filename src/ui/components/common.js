@@ -448,7 +448,6 @@ export const TokenSidebar = (props) => {
     }
 
     return (
-
         <div>
             <div class='col2'>
                 {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}

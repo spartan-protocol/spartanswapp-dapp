@@ -12,7 +12,7 @@ export const MigrateBanner = styled.div`
   max-height: 60px;
   display: flex;
   justify-content: center;
-  background-color: var(--spartanGrey);
+  background-color: #0a0001;
   color: ${ Colour().white};
   font-weight: 400;
   text-align: center;
