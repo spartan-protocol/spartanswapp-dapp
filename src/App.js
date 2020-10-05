@@ -62,8 +62,7 @@ const App = () => {
                                     <Route path="/swap" exact component={SimpleSwap} />
                                 </Switch>
                             </Body>
-                        </BodyWrapper>
-                        
+                        </BodyWrapper>                        
                     </AppWrapper>
                 </ContextProvider>
             </div>

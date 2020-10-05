@@ -423,7 +423,7 @@ export const CoinRow = (props) => {
                         {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
                         {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
                         {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
-                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' /><br /></>}
+                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + props.address + "/logo.png"}/><br /></>}
                         <Label size={props.size / 1.8}>{props.symbol}</Label>
                     </div>
                 </div>
