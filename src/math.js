@@ -1,8 +1,7 @@
-import { one, bn, convertFromWei } from './utils'
+import { one, bn, convertFromWei, formatBN } from './utils'
 
 export const getSwapOutput = (inputAmount, pool, toBase) => {
     // formula: (x * X * Y) / (x + X) ^ 2
-  console.log(inputAmount, pool)
   const x = bn(inputAmount)
   const X = toBase ? bn(pool.tokenAmt) : bn(pool.baseAmt) // input is token if toBase
   const Y = toBase ? bn(pool.baseAmt) : bn(pool.tokenAmt) // output is baseAmt if toBase

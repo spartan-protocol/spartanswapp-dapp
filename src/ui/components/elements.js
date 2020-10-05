@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button as AntButton } from "antd"
+import { Button as AntButton, notification } from "antd"
 import { UnorderedListOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 export const Colour = (alpha) => {
@@ -306,3 +306,13 @@ export const Button = (props) => {
 }
 
 
+export const openNotification = (_message, _title) => {
+    notification.open({
+        message: { _title },
+        description: { _message },
+        onClick: () => {
+            console.log('Notification Clicked!');
+            setTimeout = '3'
+        }
+    })
+}
