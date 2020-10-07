@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Col, Breadcrumb, Button, Input, Dropdown, Menu, Divider, Table } from 'antd'
+import { Row, Col, Breadcrumb, Button, Input, Dropdown, Menu, Divider, Table, Card, notification, Alert } from 'antd'
 import { DownOutlined, CopyOutlined } from '@ant-design/icons';
-// PlusCircleOutlined, MinusCircleOutlined, Tooltip
-import {
-    rainbowStop, getIntFromName,
-    convertFromWei, formatUSD,
-} from '../../utils'
+import { rainbowStop, getIntFromName, convertFromWei, formatUSD } from '../../utils'
 import { paneStyles, colStyles } from '../components/styles'
 import { getTokenSymbol, BNB_ADDR, SPARTA_ADDR, WBNB_ADDR } from '../../client/web3'
 import { H1, HR, Colour, Text, Center, Label, Sublabel, LabelGroup } from '../components/elements'
@@ -26,6 +22,54 @@ export const BreadcrumbCombo = (props) => {
     )
 }
 
+export const card = () => {
+    return (
+        <div className="site-card-border-less-wrapper">
+            <Card title="Card title" id="card" bordered={false} style={{ width: 300 }}>
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </Card>
+        </div>
+    )
+}
+
+export const successAlert = () => {
+    return (
+        <Alert message="Success Text" type="success" />
+    )
+}
+
+export const errorAlert = () => {
+    return (
+        <Alert message="Error Text" type="error" />
+    )
+}
+
+export const approvalNotification = () => {
+    notification.open({
+        message: 'Approval Sent',
+        description:
+            'Your Approval request has been sent. ',
+        className: 'custom-class',
+        style: {
+            width: 300,
+        },
+    });
+};
+
+export const swapNotification = () => {
+    notification.open({
+        message: 'Swap Sent',
+        description:
+            'Your Swap transaction has been processed. ',
+        className: 'custom-class',
+        style: {
+            width: 300,
+        },
+    });
+};
+
 export const InputPane = (props) => {
 
     const styles = {
@@ -38,7 +82,7 @@ export const InputPane = (props) => {
             <Row>
                 <Col xs={24}>
                     <Input onChange={props.onInputChange}
-                        placeholder={convertFromWei(props.paneData?.input)}
+                        placeholder={convertFromWei(props.paneData ?.input)}
                         size={'large'}
                         // defaultValue={convertFromWei(props.paneData?.input)}
                         allowClear={true}
@@ -47,7 +91,7 @@ export const InputPane = (props) => {
                     //   tokenList={props.tokenList} />}
                     ></Input>
                     <Sublabel>Balance:
-            {convertFromWei(props.paneData?.balance)} ({props.paneData?.symbol})</Sublabel>
+            {convertFromWei(props.paneData ?.balance)} ({props.paneData ?.symbol})</Sublabel>
                 </Col>
             </Row>
             <PercentButtonRow changeAmount={props.changeAmount} />
@@ -67,15 +111,15 @@ export const InputPaneStatic = (props) => {
             <Row>
                 <Col xs={24}>
                     <Input onChange={props.onInputChange}
-                        placeholder={convertFromWei(props.paneData?.input)}
+                        placeholder={convertFromWei(props.paneData ?.input)}
                         // defaultValue={convertFromWei(props.paneData?.input)}
                         allowClear={true}
                         addonAfter={
                             <TokenSymbol
-                                symbol={props.tokenSymbol?.symbol} />}
+                                symbol={props.tokenSymbol ?.symbol} />}
                     ></Input>
                     <Sublabel>Balance:
-            {convertFromWei(props.paneData?.balance)} ({props.tokenSymbol?.symbol})</Sublabel>
+            {convertFromWei(props.paneData ?.balance)} ({props.tokenSymbol ?.symbol})</Sublabel>
                 </Col>
             </Row>
             <PercentButtonRow changeAmount={props.changeAmount} />
@@ -211,7 +255,7 @@ export const TokenDropDown = (props) => {
     return (
         <div>
             <Dropdown overlay={menu}>
-                {/* <Button style={{ width: 120 }}> */}
+                {/*<Button style={{ width: 120 }}> */}
                 <Row style={style}>
                     <Col xs={8} style={{ paddingLeft: 2 }}>
                         <ColourCoin symbol={symbol} size={22} />
@@ -256,9 +300,7 @@ export const TokenSymbol = (props) => {
                 </Col>
             </Row>
         </div>
-
     )
-
 }
 
 export const PoolPaneSide = (props) => {
@@ -336,9 +378,9 @@ export const PoolPane = (props) => {
                 <Row>
                     <Col xs={24}>
                         <ColourCoin symbol={props.symbol} size={40} />
-                        <Center><Text size={30} margin={"-40px 0px 5px 0px"}>{convertFromWei(props?.balance)}</Text></Center>
+                        <Center><Text size={30} margin={"-40px 0px 5px 0px"}>{convertFromWei(props ?.balance)}</Text></Center>
                         {/* <Center><Label margin={"0px 0px 0px 0px"}>({formatUSD(convertFromWei(props?.balance))})</Label></Center> */}
-                        <Center><Sublabel margin={"0px 0px 5px 0px"}>DEPTH ({props?.symbol})</Sublabel></Center>
+                        <Center><Sublabel margin={"0px 0px 5px 0px"}>DEPTH ({props ?.symbol})</Sublabel></Center>
 
                         {!props.hideSubpane &&
                             <div>
@@ -414,7 +456,6 @@ export const CoinRow = (props) => {
     }
 
     return (
-
         <div>
             <div class='col-container'>
                 <div class='column'>
@@ -423,7 +464,7 @@ export const CoinRow = (props) => {
                         {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
                         {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
                         {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
-                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + props.address + "/logo.png"}/><br /></>}
+                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + props.address + "/logo.png"} /><br /></>}
                         <Label size={props.size / 1.8}>{props.symbol}</Label>
                     </div>
                 </div>
@@ -434,7 +475,6 @@ export const CoinRow = (props) => {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
@@ -528,11 +568,6 @@ export const CDPPane = (props) => {
         width: 400
     }
 
-    // const colStyles = {
-    //   display: 'flex',
-    //   textAlign: 'center'
-    // }
-
     return (
         <div>
             <Col xs={24} sm={24} xl={24} style={poolStyles}>
@@ -540,8 +575,8 @@ export const CDPPane = (props) => {
                     <Col xs={24}>
                         <Divider><Label size={20}>{props.name}</Label> </Divider>
                         <ColourCoin symbol={props.symbol} size={40} />
-                        <Center><Text size={30} margin={"-40px 0px 5px 0px"}>{convertFromWei(props?.balance)}</Text></Center>
-                        <Center><Label margin={"0px 0px 0px 0px"}>({formatUSD(convertFromWei(props?.balance))})</Label></Center>
+                        <Center><Text size={30} margin={"-40px 0px 5px 0px"}>{convertFromWei(props ?.balance)}</Text></Center>
+                        <Center><Label margin={"0px 0px 0px 0px"}>({formatUSD(convertFromWei(props ?.balance))})</Label></Center>
                     </Col>
                 </Row>
             </Col>
