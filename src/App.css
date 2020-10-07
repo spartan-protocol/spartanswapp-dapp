@@ -58,10 +58,6 @@
     font-family: 'Spartan';
 }
 
-H1 {
-   
-}
-
 
 
 h3 {
@@ -80,8 +76,8 @@ wallet {
 
 
 .arrow {
-    width: 0.5px;
-    height: 0.5px;
+    width: 0.2px;
+    height: 0.2px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -90,7 +86,7 @@ wallet {
 
 .outerContainer {
     color: var(--textColor);
-    background-color: #110d01;
+    background-color: #0a0001;
     margin: auto;
     width: 550px;
     border-radius: 2rem;
@@ -107,6 +103,10 @@ wallet {
     border: 0.5px solid #292C2F;
     text-align: left;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+}
+
+Input {
+    border-radius: 10rem;
 }
 
 button3 {
@@ -293,5 +293,121 @@ header {
   cursor: pointer;
 }
 
-/* ____________________________________________________________________________*/
+/* _______________________________________________________________________________________*/
 
+.ant-input {
+    background: #110D01;
+    color: #C7692B;
+    border: 10px solid #C7692B;
+}
+
+.ant-input {
+    caret-color: #C7692B;
+}
+
+    .ant-input:placeholder-shown {
+        color: #000
+    }
+
+    .ant-input::selection {
+        border-color: #C7692B;
+        background: #C7692B;
+        caret-color: #C7692B;
+    }
+
+.ant-input-affix-wrapper .ant-input-prefix,
+.ant-input-affix-wrapper .ant-input-suffix {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.ant-input-suffix {
+    margin: 0;
+}
+
+.ant-select-selection {
+    border-color: #C7692B;
+}
+
+.ant-select-selection-selected-value {
+    color: #C7692B;
+}
+
+.ant-select-dropdown-menu-item {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.ant-select-dropdown-menu-item-selected {
+    color: rgba(0, 0, 0, 0.65);
+    font-weight: 600;
+    background-color: lighten(#C7692B, 15%);
+}
+
+.ant-select-dropdown-menu-item-active:hover:not(.ant-select-dropdown-menu-item-disabled) {
+    background-color: #C7692B;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled) {
+    background-color: lighten(#C7692B, 3%);
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.ant-select-arrow {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.ant-input-number-disabled,
+.ant-input[disabled] {
+    color: rgba(255, 255, 255, 0.25);
+    background: #110D01;
+    border: 1px solid #ffffff45;
+}
+
+    .ant-input[disabled]:hover {
+        border-color: #ffffff40;
+        border-right-width: 1px !important;
+    }
+
+    .ant-input[disabled]::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+    }
+
+.ant-radio-button-wrapper:first-child {
+    border-left: 1px solid #97948e;
+}
+
+.ant-radio-button-wrapper {
+    color: #97948e;
+    border: 1px solid #97948e;
+}
+
+    .ant-radio-button-wrapper:not(:first-child)::before {
+        background-color: #000;
+    }
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+    background-color: #000 !important;
+    opacity: 1;
+}
+
+.ant-radio-inner {
+    margin: 0;
+    border-color: #97948e;
+    color: #fff;
+    width: 17px;
+    border-radius: 50%;
+}
+
+    .ant-radio-inner::after {
+        left: 4px;
+    }
+
+label.ant-radio-wrapper {
+    color: #ffffffa6;
+}
+
+span.ant-radio + * {
+    padding-right: 12px;
+    padding-left: 12px;
+    vertical-align: middle;
+}

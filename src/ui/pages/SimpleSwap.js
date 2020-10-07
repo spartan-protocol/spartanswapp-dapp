@@ -2,17 +2,19 @@ import { Container } from '../layout/theme/components'
 import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
-import { MenuOutlined, } from '@ant-design/icons'
-import { SPARTA_ADDR, BNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData } from '../../client/web3'
-import { Input, Dropdown, notification } from 'antd';
+import { MenuOutlined } from '@ant-design/icons'
+import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData } from '../../client/web3'
+import { Input, notification, message } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, one } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
-import { Center, Button, H1, H2, LabelWhite, P, message, openNotification } from '../components/elements';
+import { Center, Button, H1, H2, LabelWhite, P } from '../components/elements';
+import { card, approvalNotification, swapNotification} from '../components/common';
 import 'antd/dist/antd.css'
 import { openBar } from '../layout/TokenSidebar'
+import spinner from '../../assets/images/spinner.svg'
+import { SpinnerWrapper } from '../layout/theme';
 
-//import { openAddress, AddressModal, closeAddress } from '../layout/AddressModal'
-//import '../../App.css'
+
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
@@ -126,13 +128,29 @@ const SimpleSwap = (props) => {
 
     const onInputChange = async (e) => {
         try {
-            setApproval(false)
-            setAssetFrom(e)
-            let token = await getTokenData(e, context.walletData)
-            console.log(token)
-            setInputTokenData(token)
-            checkApproval(AddressFrom)
-            setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
+            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) {
+                setApproval(false)
+                setAssetFrom(e)
+                let token = await getTokenData(e, context.walletData)
+                console.log(token)
+                setInputTokenData(token)
+                checkApproval(AddressFrom)
+                setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
+                console.log("Address empty")
+            }
+            else {
+                try {
+                    setInputTokenData({
+                        'symbol': 'NaN',
+                        'name': '',
+                        'balance': 0,
+                        'address': ''
+                    })                    
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
         }
         catch (err) {
             console.log(err)
@@ -176,6 +194,7 @@ const SimpleSwap = (props) => {
             gasPrice: '',
             gas: ''
         })
+        approvalNotification()
         //message.success(`Transaction Sent!`, 2);
     }
 
@@ -185,7 +204,6 @@ const SimpleSwap = (props) => {
         setStartTx(true)
         let contract = getRouterContract()
         let amount = convertToWei(inputAmount)
-        //console.log(swapInfo)
 
         await contract.methods.swap(amount, AddressFrom, AddressTo).send({
             from: context.walletData.address,
@@ -195,11 +213,10 @@ const SimpleSwap = (props) => {
         //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
-        await getData()
+        swapNotification()
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
     }
     /* __________________________________________________________________________________________________ */
-
 
     const setMaxBalance = () => {
         let maxBalance = inputTokenData.balance
@@ -212,15 +229,18 @@ const SimpleSwap = (props) => {
                 <Container>
                     <br />
                     <div className='centerObject2'>
-                        <H1>Swap</H1>
+                        <img src="favicon.png" height='100' width="100" />
+                        <br />
+                        <H1>Swap </H1>
+                        <br />
                         {!context.connected &&
                             <>
-                                <br />
                                 <p>Connecting Metamask...</p>
                                 <p>Ensure your Metamask is connected to the BSC Mainnet to use this application</p>
-                                <p>If it taking a while, Try refreshing the page</p>
+        
+                                <p>Taking a while? Try refreshing the page</p>
                                 <br />
-                                <img src="favicon.png" height='70' width="70" />
+                                <SpinnerWrapper src={spinner} />
                             </>
                         }
                     </div>
@@ -229,22 +249,25 @@ const SimpleSwap = (props) => {
                             <Center>
                                 <Container>
                                     < br />
-                                    <H2>Input</H2>
-                                    <div>
-                                        <Input
-                                            onChange={(e) => onInputChange(e.target.value)}
-                                            placeholder={'Enter BEP2E Asset Address'}
-                                            style={{ width: 400 }}></Input>
-                                        <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
-                                        < br />
-                                        <Input
-                                            placeholder={'0.0'}
-                                            onChange={(e) => onInputAmountChange(e.target.value)}
-                                            style={{ width: 400 }}>
-                                        </Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
-                                        < br />
-                                        <P>Balance: {convertFromWei(inputTokenData.balance)} &nbsp; {inputTokenData.symbol}</P>
-                                        < br />
+                                    <div className='centerObject2'>
+                                        <H2>Input</H2>
+                                        <div>
+                                            <Input
+                                                onChange={(e) => onInputChange(e.target.value)}
+                                                placeholder={'Enter BEP2E Asset Address'}
+
+                                                style={{ width: 300 }}></Input>
+                                            <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
+                                            < br />
+                                            <Input
+                                                placeholder={'0.0'}
+                                                onChange={(e) => onInputAmountChange(e.target.value)}
+                                                style={{ width: 300 }}>
+                                            </Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
+                                            < br />
+                                            <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
+                                            < br />
+                                        </div>
                                     </div>
                                 </Container>
                             </Center>
@@ -259,17 +282,20 @@ const SimpleSwap = (props) => {
                             <Center>
                                 <Container>
                                     < br />
-                                    <H2>Output</H2><br />
-                                    <div>
-                                        <Input
-                                            placeholder={'Enter BEP2E Asset Address'}
-                                            onChange={(e) => onOutputChange(e.target.value)}
-                                            style={{ width: 400 }}></Input>
-                                        <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
-                                        < br />
-                                        <P>Output: </P>
-                                        <P>Slippage: </P>
-                                        <P>Fee: </P>
+                                    <div className='centerObject2'>
+                                        <H2>Output</H2><br />
+                                        <div>
+                                            <Input
+                                                placeholder={'Enter BEP2E Asset Address'}
+                                                onChange={(e) => onOutputChange(e.target.value)}
+                                                style={{ width: 300 }}></Input>
+                                            <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
+                                            < br />
+                                            <P>Output: </P>
+                                            <P>Slippage: </P>
+                                            <P>Fee: </P>
+
+                                        </div>
                                     </div>
                                 </Container>
                             </Center>

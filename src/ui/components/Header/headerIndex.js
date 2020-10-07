@@ -7,11 +7,13 @@ import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesDa
 import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from './headerStyles'
 import '../../../App.css'
 import Sidebar, { openNav, closeNav } from '../../layout/Sidebar'
+import { dropdownToken } from '../../layout/Dropdown'
 import TokenSidebar, { openBar, closeBar } from '../../layout/TokenSidebar'
 import spinner from '../../../assets/images/spinner.svg' 
 import { SpinnerWrapper } from '../../layout/theme';
 import { CheckOutlined } from '@ant-design/icons'
 import { Button } from '../elements'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const { Header } = Layout;
 
@@ -111,9 +113,6 @@ const Headbar = (props) => {
                                 <Button style={{width: 150}}onClick={connectWallet}>CONNECT</Button>
                             }
                             {connecting &&
-                                <SpinnerWrapper src={spinner} />
-                            }
-                            {connecting &&
                                 <Button style={{ width: 150 }}>CONNECTING</Button>
                             }   
                             {connected &&
@@ -125,6 +124,7 @@ const Headbar = (props) => {
             </HeaderFrame>
             <Sidebar />
             <TokenSidebar />
+           
         </div>
     )
 }
