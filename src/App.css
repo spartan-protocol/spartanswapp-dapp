@@ -58,8 +58,6 @@
     font-family: 'Spartan';
 }
 
-
-
 h3 {
     font-size: 15px;
 }
@@ -73,7 +71,6 @@ wallet {
     font-size: 25px;
     text-align: center;
 }
-
 
 .arrow {
     width: 0.2px;
@@ -103,64 +100,6 @@ wallet {
     border: 0.5px solid #292C2F;
     text-align: left;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-}
-
-Input {
-    border-radius: 10rem;
-}
-
-button3 {
-    background-color: var(--spartanGrey);
-    color: var(--buttonOrange);
-    width: 0;
-    border-radius: 2rem;
-    border: 0px solid;
-    font-size: 16px;
-    padding: 5px 15px;
-    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-    text-align: center;
-}
-
-button2 {
-    background-color: var(--buttonOrange);
-    color: white;
-    width: 150px;
-    border-radius: 0rem;
-    text-align: center;
-    font-size: 18px;
-    padding: 5px 0px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-button1 {
-    background-color: var(--spartanGrey);
-    color: var(--textColor);
-    width: 0;
-    border-radius: 0rem;
-    border: 1px solid var(--buttonOrange);
-    margin:auto;
-    font-size: 16px;
-    padding: 5px 50px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-
-footer {
-    width: 100%;
-    min-height: 40px;
-    align-self: flex-end;
-    background-color: var(--spartanGrey)
-}
-
-header {
-    width: 100%;
-    padding: 12px 0;
-    display: flex;
-    justify-content: center;
-    background-color: var(--uniswapPink);
-    color: var(--malibuBlue);
-    font-weight: 400;
-    text-align: center;
 }
 
 /* SIDEPANEL CODE ______________________________________________________*/
@@ -201,8 +140,7 @@ header {
         font-size: 10px;
     }
     /*_____________________________________________*/
-.column {
-    
+.column {    
     text-align: center;
     margin: auto;
     float: left;
@@ -247,167 +185,6 @@ header {
 
 .centerObject2 {
     text-align: center;
-    margin: auto;
-    
+    margin: auto;    
 }
 
-
-/*___________________________address Modal_________________________________*/
-.modal {
-   /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 35%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    background-color: white;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #292C2F;
-    width: 60%;
-    height: 60%;
-    border-radius: 2rem;
-}
-
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* _______________________________________________________________________________________*/
-
-.ant-input {
-    background: #110D01;
-    color: #C7692B;
-    border: 10px solid #C7692B;
-}
-
-.ant-input {
-    caret-color: #C7692B;
-}
-
-    .ant-input:placeholder-shown {
-        color: #000
-    }
-
-    .ant-input::selection {
-        border-color: #C7692B;
-        background: #C7692B;
-        caret-color: #C7692B;
-    }
-
-.ant-input-affix-wrapper .ant-input-prefix,
-.ant-input-affix-wrapper .ant-input-suffix {
-    color: rgba(255, 255, 255, 0.45);
-}
-
-.ant-input-suffix {
-    margin: 0;
-}
-
-.ant-select-selection {
-    border-color: #C7692B;
-}
-
-.ant-select-selection-selected-value {
-    color: #C7692B;
-}
-
-.ant-select-dropdown-menu-item {
-    color: rgba(255, 255, 255, 0.65);
-}
-
-.ant-select-dropdown-menu-item-selected {
-    color: rgba(0, 0, 0, 0.65);
-    font-weight: 600;
-    background-color: lighten(#C7692B, 15%);
-}
-
-.ant-select-dropdown-menu-item-active:hover:not(.ant-select-dropdown-menu-item-disabled) {
-    background-color: #C7692B;
-    color: rgba(0, 0, 0, 0.65);
-}
-
-.ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled) {
-    background-color: lighten(#C7692B, 3%);
-    color: rgba(0, 0, 0, 0.65);
-}
-
-.ant-select-arrow {
-    color: rgba(255, 255, 255, 0.45);
-}
-
-.ant-input-number-disabled,
-.ant-input[disabled] {
-    color: rgba(255, 255, 255, 0.25);
-    background: #110D01;
-    border: 1px solid #ffffff45;
-}
-
-    .ant-input[disabled]:hover {
-        border-color: #ffffff40;
-        border-right-width: 1px !important;
-    }
-
-    .ant-input[disabled]::placeholder {
-        color: rgba(255, 255, 255, 0.25);
-    }
-
-.ant-radio-button-wrapper:first-child {
-    border-left: 1px solid #97948e;
-}
-
-.ant-radio-button-wrapper {
-    color: #97948e;
-    border: 1px solid #97948e;
-}
-
-    .ant-radio-button-wrapper:not(:first-child)::before {
-        background-color: #000;
-    }
-
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
-    background-color: #000 !important;
-    opacity: 1;
-}
-
-.ant-radio-inner {
-    margin: 0;
-    border-color: #97948e;
-    color: #fff;
-    width: 17px;
-    border-radius: 50%;
-}
-
-    .ant-radio-inner::after {
-        left: 4px;
-    }
-
-label.ant-radio-wrapper {
-    color: #ffffffa6;
-}
-
-span.ant-radio + * {
-    padding-right: 12px;
-    padding-left: 12px;
-    vertical-align: middle;
-}
