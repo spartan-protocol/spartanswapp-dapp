@@ -909,6 +909,7 @@ export const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
+    background-color: black;
 `
 
 export const Body = styled.div`

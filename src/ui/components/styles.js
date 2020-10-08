@@ -12,7 +12,7 @@ export const paneStyles = {
 
 export const colStyles = {
     padding: 20,
-    backgroundColor: Colour().white
+    backgroundColor: Colour().black
 }
 
 

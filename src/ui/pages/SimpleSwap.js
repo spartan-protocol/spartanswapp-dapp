@@ -117,18 +117,30 @@ const SimpleSwap = (props) => {
     }
 
     const checkApproval = async (address) => {
-        const contract = getTokenContract(address)
-        const approval = await contract.methods.allowance(context.walletData.address, ROUTER_ADDR).call()
-        if (+approval > 0) {
+        if (address == BNB_ADDR || address == WBNB_ADDR)
+        {
             setApproval(true)
         }
+        else {
+            const contract = getTokenContract(address)
+            const approval = await contract.methods.allowance(context.walletData.address, ROUTER_ADDR).call()
+            if (+approval > 0) {
+                setApproval(true)
+            }
+        }      
+    }
+
+    const setMaxBalance = () => {
+        let maxBalance = inputTokenData.balance
+        onInputAmountChange(maxBalance)
     }
 
     /* ______________________________________________INPUTS __________________________________________________________ */
 
     const onInputChange = async (e) => {
         try {
-            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) {
+            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) /*TO-DO: A Check against valid addresses in wallet instead of set ones*/
+            {
                 setApproval(false)
                 setAssetFrom(e)
                 let token = await getTokenData(e, context.walletData)
@@ -136,15 +148,14 @@ const SimpleSwap = (props) => {
                 setInputTokenData(token)
                 checkApproval(AddressFrom)
                 setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
-                console.log("Address empty")
             }
             else {
                 try {
                     setInputTokenData({
                         'symbol': 'NaN',
-                        'name': '',
+                        'name': 'NaN',
                         'balance': 0,
-                        'address': ''
+                        'address': 'NaN'
                     })                    
                 }
                 catch (err) {
@@ -195,11 +206,9 @@ const SimpleSwap = (props) => {
             gas: ''
         })
         approvalNotification()
-        //message.success(`Transaction Sent!`, 2);
     }
 
     /* Step 2 */
-    /* to send to self*/
     const swap = async () => {
         setStartTx(true)
         let contract = getRouterContract()
@@ -210,18 +219,14 @@ const SimpleSwap = (props) => {
             gasPrice: '',
             gas: '',
         })
-        //message.success(`Transaction Sent!`, 2);
         setStartTx(false)
         setEndTx(true)
         swapNotification()
         context.setContext({ 'tokenDetailsArray': await getTokenDetails(context.walletData.address, context.tokenArray) })
     }
-    /* __________________________________________________________________________________________________ */
 
-    const setMaxBalance = () => {
-        let maxBalance = inputTokenData.balance
-        onInputAmountChange(maxBalance)
-    }
+    /* __________________________________________________________________________________________________ */
+    
 
     return (
         <div>
@@ -314,11 +319,11 @@ const SimpleSwap = (props) => {
                     }
                     {
                         approval && !startTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>UPGRADE</Button>
+                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
                     <br /><br />
                 </div>

@@ -6,11 +6,10 @@
     "\\src\\client",
     "\\src\\ui",
     "\\src\\ui\\components",
-    "\\src\\ui\\components\\Header",
     "\\src\\ui\\components\\StyleSheets",
     "\\src\\ui\\layout",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\client\\web3.js",
+  "SelectedNode": "\\src\\ui\\components\\elements.js",
   "PreviewInSolutionExplorer": false
 }
