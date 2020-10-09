@@ -1,0 +1,32 @@
+
+.outerContainer {
+    color: var(--textColor);
+    background-color: #141414;
+    margin: auto;
+    width: 430px;
+    border-radius: 0.8rem;
+    border: 0px solid #292C2F;
+}
+
+.container2 {
+    color: var(--textColor);
+    background-color: #1b1e1f;
+    margin-left: 28px;
+    margin-right: 28px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 140px;
+    border-radius: 0.8rem;
+    border: 0.5px solid #202124;
+    text-align: left;
+}
+
+.bottomContainer {
+    color: var(--textColor);
+    background-color: rgba(0,0,0, 0.1);
+    margin: auto;
+    width: 350px;
+    border-radius: 0.8rem;
+    border: 0px solid #292C2F;
+
+}

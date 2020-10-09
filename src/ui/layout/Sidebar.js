@@ -7,7 +7,6 @@ import { Table, Drawer, Divider } from 'antd'
 import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools } from '../../client/web3'
 import Web3 from 'web3'
 
-
 export function openNav() {
     document.getElementById("mySidepanel").style.width = "370px";
 }

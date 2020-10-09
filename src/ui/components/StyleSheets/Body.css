@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'Spartan';
+    src: local('Spartan'), url(../../../assets/font/Spartan-Regular.ttf) format('truetype');
+}
+
+/*@font-face {
+    font-family: "Inter var", sans-serif;
+}*/
+
+
+.column {
+    text-align: center;
+    margin: auto;
+    float: left;
+    width: 50%;
+    padding: 0px;
+}
+
+.col-container {
+    display: flex; /* Make the container element behave like a table */
+    width: 350px; /* Set full-width to expand the whole page */
+    margin: auto;
+    height: 120px;
+}
+
+.col {
+    display: table-cell; /* Make elements inside the container behave like table cells */
+    text-align: center;
+    margin: auto;
+    width: 20%;
+    height: 0px;
+    padding: 0px;
+}
+
+
+.col2 {
+    display: table-cell; /* Make elements inside the container behave like table cells */
+    text-align: center;
+    margin: auto;
+    width: 20%;
+    height: 0px;
+    padding: 0px;
+}
+
+* {
+    font-family: 'Spartan';
+}
+
+.arrow {
+    width: 0.2px;
+    height: 0.2px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    color: white;
+}
+
+.flexbox_1 {
+    display: flex;
+    justify-content: center;
+}
+
+.centerObject2 {
+    text-align: center;
+    margin: auto;
+}
+
+wallet {
+    font-size: 25px;
+    text-align: center;
+}

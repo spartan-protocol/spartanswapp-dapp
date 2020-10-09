@@ -2,14 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\artifacts",
-    "\\src\\client",
     "\\src\\ui",
     "\\src\\ui\\components",
-    "\\src\\ui\\components\\StyleSheets",
-    "\\src\\ui\\layout",
-    "\\src\\ui\\pages"
+    "\\src\\ui\\components\\StyleSheets"
   ],
-  "SelectedNode": "\\src\\ui\\components\\elements.js",
+  "SelectedNode": "\\src\\ui\\components\\StyleSheets\\Containers.css",
   "PreviewInSolutionExplorer": false
 }

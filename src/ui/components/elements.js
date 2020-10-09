@@ -26,11 +26,11 @@ export const Colour = (alpha) => {
 
 export const H1 = (props) => {
     let styles = { ...props.style || {} }
-    styles.fontSize = '32px'
+    styles.fontSize = '40px'
     //styles.fontColour = '#FFFFFF'
     styles.fontWeight = "bold"
-    styles.color = Colour().red
-    
+    styles.color = Colour().white
+
     if (props.margin) {
         styles.margin = props.margin
     }
@@ -45,10 +45,10 @@ export const H1 = (props) => {
 
 export const H2 = (props) => {
     let styles = { ...props.style || {} }
-    styles.fontSize = "20px"
+    styles.fontSize = "17px"
     styles.fontWeight = "bold"
-    styles.color = Colour().red
-    styles.margin = "20px 0px"    
+    styles.color = Colour().white
+    styles.margin = "20px 0px"
 
     if (props.margin) {
         styles.margin = props.margin
@@ -62,10 +62,10 @@ export const H2 = (props) => {
 
 export const H3 = (props) => {
     let styles = { ...props.style || {} }
-    styles.fontSize = "15px"    
-    styles.color = Colour().black
+    styles.fontSize = "23px"
+    styles.color = Colour().white
     styles.margin = "20px 0px"
-
+    styles.fontWeight = "bold"
 
     if (props.margin) {
         styles.margin = props.margin
@@ -219,7 +219,6 @@ export const P = (props) => {
     styles.fontSize = "12px"
     styles.color = Colour().white
     styles.display = "block"
-    styles.fontWeight = "bold"
 
     if (props.size) {
         styles.fontSize = props.size
@@ -274,6 +273,16 @@ export const Button = (props) => {
         styles.borderColor = Colour().white
         styles.fontSize = 20
         styles.fontWeight = 800
+    }
+    else if (props.type === "third") {
+        styles.color = Colour().white
+        styles.backgroundColor = '#1b1e1f'
+        styles.borderColor = '#1b1e1f'
+    }
+    else if (props.type === "wallet") {
+        styles.color = Colour().white
+        styles.backgroundColor = '#a80005'
+        styles.borderColor = '#a80005'
     } else {
         styles.color = Colour().white
         styles.backgroundColor = Colour().gold

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Col, Breadcrumb, Button, Input, Dropdown, Menu, Divider, Table, Card, notification, Alert } from 'antd'
+import { Row, Col, Breadcrumb, Button, Input, Dropdown, Menu, Divider, Table, Card, notification, Alert, Image } from 'antd'
 import { DownOutlined, CopyOutlined } from '@ant-design/icons';
 import { rainbowStop, getIntFromName, convertFromWei, formatUSD } from '../../utils'
 import { paneStyles, colStyles } from '../components/styles'
 import { getTokenSymbol, BNB_ADDR, SPARTA_ADDR, WBNB_ADDR } from '../../client/web3'
 import { H1, HR, Colour, Text, Center, Label, Sublabel, LabelGroup } from '../components/elements'
 import '../../App.css'
-
+//import '../../assets/icons/BSC/assets'
 
 export const BreadcrumbCombo = (props) => {
 
@@ -460,12 +460,10 @@ export const CoinRow = (props) => {
             <div class='col-container'>
                 <div class='column'>
                     <div class='col'>
-                        {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
                         {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
                         {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
-                        {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
-                        {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + props.address + "/logo.png"} /><br /></>}
-                        <Label size={props.size / 1.8}>{props.symbol}</Label>
+                        {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><Image src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + props.address + "info/logo.png"} width='40px' height='40px' /><br /></>}
+                    <Label size={props.size / 1.8}>{props.symbol}</Label>
                     </div>
                 </div>
                 <div class='column'>
@@ -481,20 +479,13 @@ export const CoinRow = (props) => {
 
 export const TokenSidebar = (props) => {
 
-    const rowStyles = {
-        display: 'flex',
-        justifyContent: 'left',
-        alignItems: 'left',
-    }
-
     return (
         <div>
             <div class='col2'>
                 {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
                 {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
                 {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
-                {props.address === WBNB_ADDR && <><img src={'WBNB.png'} width='40px' height='40px' /><br /></>}
-                {props.address !== WBNB_ADDR && props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img width='40px' height='40px' /><br /></>}
+                {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img src={'../../assets/icons/Smartchain/assets/' + props.address + '/logo.png'} width='40px' height='40px' /><br /></>}
                 <Label size={props.size / 1.8}>{props.symbol}</Label><br />
                 <span><Label size={props.size / 2.2}>{props.name}</Label> </span><br />
                 <h3>{props.address}</h3>

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import '../../App.css'
-import { Context } from '../../context'
-import { CoinRow, TokenSidebar } from '../components/common'
-import { HR, H1, H3, Center } from '../components/elements'
-import { Table, Drawer, Divider, Tabs, Input } from 'antd'
-import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools } from '../../client/web3'
-import Web3 from 'web3'
-import '../components/StyleSheets/Sidebar2.css'
+import { Table, Tabs } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import Web3 from 'web3';
+import '../../App.css';
+import { getAssets, getListedPools, getListedTokens, getStakesData, getTokenDetails, getWalletData } from '../../client/web3';
+import { Context } from '../../context';
+import { TokenSidebar } from '../components/common';
+import { H1, H3 } from '../components/elements';
+import '../components/StyleSheets/Sidebar2.css';
 
 
 const { TabPane } = Tabs;
