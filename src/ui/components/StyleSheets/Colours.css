@@ -1,0 +1,49 @@
+:root {
+    --black: #000000;
+    --textColor: white;
+    --greyText: white;
+    /* for setting css on <html> */
+    --backgroundColor: #333639;
+    --modalBackground: rgba(0,0,0,0.6);
+    --inputBackground: #202124;
+    --placeholderGray: #5F5F5F;
+    --shadowColor: #000;
+    /* grays  */
+    --concreteGray: #292C2F;
+    --mercuryGray: #333333;
+    --silverGray: #737373;
+    --chaliceGray: #7B7B7B;
+    --doveGray: #C4C4C4;
+    --mineshaftGray: #E1E1E1;
+    --activeGray: #292C2F;
+    --buttonOutlineGrey: #FAFAFA;
+    --tokenRowHover: #404040;
+    /*blacks*/
+    --charcoalBlack: #F2F2F2;
+    /* blues  */
+    --zumthorBlue: #212529;
+    --malibuBlue: #E67AEF;
+    --royalBlue: #DC6BE5;
+    --loadingBlue: #e4f0ff;
+    /*  purples */
+    --wisteriaPurple: #DC6BE5;
+    /* reds  */
+    --salmonRed: #FF6871;
+    /* orange  */
+    --pizazzOrange: #FF8F05;
+    /* yellows  */
+    --warningYellow: #FFE270;
+    /* pink  */
+    --uniswapPink: #DC6BE5;
+    /*green*/
+    --connectedGreen: #27AE60;
+    /* branded  */
+    --metaMaskOrange: #E8831D;
+    /* custom */
+    --sandBland: #d2d2c9;
+    --spartanRed: #a80005;
+    --pageBackground: #050303;
+    /*radial-gradient(50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);*/
+    --buttonOrange: #c7692b;
+    --spartanGrey: #110d01;
+}

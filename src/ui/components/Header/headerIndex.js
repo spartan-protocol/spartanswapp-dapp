@@ -4,16 +4,13 @@ import { Layout, message } from 'antd';
 import Web3 from 'web3'
 import { getAddressShort, } from '../../../utils'
 import { getAssets, getTokenDetails, getListedTokens, getWalletData, getStakesData, getListedPools, getPoolsData} from '../../../client/web3'
-import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from './headerStyles'
+import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from '../StyleSheets/headerStyles'
 import '../../../App.css'
 import Sidebar, { openNav, closeNav } from '../../layout/Sidebar'
-import { dropdownToken } from '../../layout/Dropdown'
 import TokenSidebar, { openBar, closeBar } from '../../layout/TokenSidebar'
-import spinner from '../../../assets/images/spinner.svg' 
-import { SpinnerWrapper } from '../../layout/theme';
+import AddressModal from '../../layout/AddressModal'
 import { CheckOutlined } from '@ant-design/icons'
 import { Button } from '../elements'
-import { InfoCircleOutlined } from '@ant-design/icons'
 
 const { Header } = Layout;
 
@@ -110,13 +107,13 @@ const Headbar = (props) => {
                         </HeaderElement>
                         <HeaderElement>
                             {!connected && !connecting &&
-                                <Button style={{width: 150}}onClick={connectWallet}>CONNECT</Button>
+                                <Button type={'wallet'} style={{width: 150}}onClick={connectWallet}>CONNECT</Button>
                             }
                             {connecting &&
-                                <Button style={{ width: 150 }}>CONNECTING</Button>
+                                <Button type={'wallet'} style={{ width: 150 }}>CONNECTING</Button>
                             }   
                             {connected &&
-                                <Button style={{ width: 150 }} onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</Button>
+                                <Button type={'wallet'} style={{ width: 150 }} onClick={openNav}><CheckOutlined /> &nbsp;{addr()}</Button>
                             }
                         </HeaderElement>
                     </HeaderSpan>
@@ -124,7 +121,7 @@ const Headbar = (props) => {
             </HeaderFrame>
             <Sidebar />
             <TokenSidebar />
-           
+            <AddressModal />
         </div>
     )
 }

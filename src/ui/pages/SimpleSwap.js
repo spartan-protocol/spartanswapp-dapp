@@ -2,19 +2,17 @@ import { Container } from '../layout/theme/components'
 import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
-import { MenuOutlined } from '@ant-design/icons'
+import { MenuOutlined, DownOutlined } from '@ant-design/icons'
 import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData } from '../../client/web3'
-import { Input, notification, message } from 'antd';
+import { Input, notification, message, Modal } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, one } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
-import { Center, Button, H1, H2, LabelWhite, P } from '../components/elements';
-import { card, approvalNotification, swapNotification} from '../components/common';
+import { Center, Button, H1, H2, H3, LabelWhite, P } from '../components/elements';
+import { card, approvalNotification, swapNotification } from '../components/common';
 import 'antd/dist/antd.css'
-import { openBar } from '../layout/TokenSidebar'
+import { openAddress } from '../layout/AddressModal'
 import spinner from '../../assets/images/spinner.svg'
 import { SpinnerWrapper } from '../layout/theme';
-
-
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
@@ -83,7 +81,6 @@ const SimpleSwap = (props) => {
 
     /* _________________________________FUNCTIONS_______________________________________________________ */
 
-
     const getData = async () => {
         let tokenDetails = await getTokenData(AddressFrom, context.walletData)
         setInputTokenData(tokenDetails)
@@ -117,8 +114,7 @@ const SimpleSwap = (props) => {
     }
 
     const checkApproval = async (address) => {
-        if (address == BNB_ADDR || address == WBNB_ADDR)
-        {
+        if (address == BNB_ADDR || address == WBNB_ADDR) {
             setApproval(true)
         }
         else {
@@ -127,7 +123,7 @@ const SimpleSwap = (props) => {
             if (+approval > 0) {
                 setApproval(true)
             }
-        }      
+        }
     }
 
     const setMaxBalance = () => {
@@ -139,8 +135,7 @@ const SimpleSwap = (props) => {
 
     const onInputChange = async (e) => {
         try {
-            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) /*TO-DO: A Check against valid addresses in wallet instead of set ones*/
-            {
+            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) /*TO-DO: A Check against valid addresses in wallet instead of set ones*/ {
                 setApproval(false)
                 setAssetFrom(e)
                 let token = await getTokenData(e, context.walletData)
@@ -156,7 +151,7 @@ const SimpleSwap = (props) => {
                         'name': 'NaN',
                         'balance': 0,
                         'address': 'NaN'
-                    })                    
+                    })
                 }
                 catch (err) {
                     console.log(err)
@@ -226,53 +221,65 @@ const SimpleSwap = (props) => {
     }
 
     /* __________________________________________________________________________________________________ */
-    
+
+    const InputTokenDropDown = () => {
+        return (
+            <Button type={'third'} style={{ width: 110 }} onClick={openAddress}>{GetIcon(inputTokenData.address)}&nbsp; {inputTokenData.symbol} <DownOutlined /></Button>
+        )
+    }
+
+    const OutputTokenDropDown = () => {
+        return (
+            <Button type={'third'} style={{ width: 110 }} onClick={''}>{GetIcon(outputTokenData.address)}&nbsp; {outputTokenData.symbol} <DownOutlined /></Button>
+        )
+    }    
+
+    const GetIcon = (address) => {
+        return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + address + "/info/logo.png"} width='40px' height='40px' />
+    }
+
+    /*______________________________________________________________________________________________*/
 
     return (
         <div>
             <div className='outerContainer'>
                 <Container>
                     <br />
-                    <div className='centerObject2'>
-                        <img src="favicon.png" height='100' width="100" />
-                        <br />
-                        <H1>Swap </H1>
-                        <br />
-                        {!context.connected &&
-                            <>
+                    {!context.connected &&
+                        <>
+                            <div className='centerObject2'>
+                                <img src="favicon.png" height='100' width="100" />
+                                <br />
+                                <br />
                                 <p>Connecting Metamask...</p>
                                 <p>Ensure your Metamask is connected to the BSC Mainnet to use this application</p>
-        
+
                                 <p>Taking a while? Try refreshing the page</p>
                                 <br />
                                 <SpinnerWrapper src={spinner} />
-                            </>
-                        }
-                    </div>
+                            </div>
+                        </>
+                    }
                     {context.connected && <>
+                        <div className='centerObject2'>
+                            <H3>Swap </H3>
+                        </div>
                         <div className='container2'>
                             <Center>
                                 <Container>
                                     < br />
-                                    <div className='centerObject2'>
-                                        <H2>Input</H2>
-                                        <div>
+                                    <H2>Input</H2>
+                                    <div>
+                                        <div className='centerObject2'>
                                             <Input
-                                                onChange={(e) => onInputChange(e.target.value)}
-                                                placeholder={'Enter BEP2E Asset Address'}
-
-                                                style={{ width: 300 }}></Input>
-                                            <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
-                                            < br />
-                                            <Input
+                                                bordered={false}
                                                 placeholder={'0.0'}
                                                 onChange={(e) => onInputAmountChange(e.target.value)}
-                                                style={{ width: 300 }}>
-                                            </Input><Button style={{ width: 60 }} onClick={setMaxBalance}>{'Max'}</Button>
-                                            < br />
-                                            <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
-                                            < br />
+                                                style={{ width: 220, height: 30, fontSize: 30 }}></Input>
+                                            <InputTokenDropDown />
+                                            < br />                                           
                                         </div>
+                                        <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
                                     </div>
                                 </Container>
                             </Center>
@@ -287,19 +294,16 @@ const SimpleSwap = (props) => {
                             <Center>
                                 <Container>
                                     < br />
-                                    <div className='centerObject2'>
-                                        <H2>Output</H2><br />
+                                    <H2>Output</H2>
+                                    <div>
                                         <div>
                                             <Input
-                                                placeholder={'Enter BEP2E Asset Address'}
+                                                bordered={false}
+                                                placeholder={'0.0'}
                                                 onChange={(e) => onOutputChange(e.target.value)}
-                                                style={{ width: 300 }}></Input>
-                                            <Button style={{ width: 60 }} onClick={openBar}><MenuOutlined /></Button>
-                                            < br />
+                                                style={{ width: 220, fontSize: 30 }}></Input><OutputTokenDropDown />                                            
+                                            < br />                                            
                                             <P>Output: </P>
-                                            <P>Slippage: </P>
-                                            <P>Fee: </P>
-
                                         </div>
                                     </div>
                                 </Container>
@@ -307,28 +311,39 @@ const SimpleSwap = (props) => {
                         </div>
                     </>}
                 </Container>
-
                 <div className='centerObject2'>
-
-                    <br />
                     {!context.connected &&
                         <p> </p>}
                     {
                         !approval && context.connected &&
-                        <Button style={{ width: 150 }} onClick={approve}>APPROVE</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={approve}>APPROVE</Button>
                     }
                     {
                         approval && !startTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
+
                     <br /><br />
                 </div>
             </div>
-            <br /><br /><br />
+            {context.connected &&
+                <>
+                    <div className="bottomContainer">
+                        <div className="centerObject2">
+                            <Container>
+                                <br />
+                                <P>Slippage: </P>
+                                <P>Fee: </P>
+                                <br />
+                            </Container>
+                        </div>
+                    </div>
+                </>
+            }
         </div>
     )
 }
