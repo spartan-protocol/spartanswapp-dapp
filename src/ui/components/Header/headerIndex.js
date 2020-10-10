@@ -8,6 +8,7 @@ import { HeaderFrame, MigrateBannerLarge, HeaderElement, HeaderSpan } from '../S
 import '../../../App.css'
 import Sidebar, { openNav, closeNav } from '../../layout/Sidebar'
 import TokenSidebar, { openBar, closeBar } from '../../layout/TokenSidebar'
+import AddressModal from '../../layout/AddressModal'
 import { CheckOutlined } from '@ant-design/icons'
 import { Button } from '../elements'
 
@@ -119,7 +120,8 @@ const Headbar = (props) => {
                 </MigrateBannerLarge>
             </HeaderFrame>
             <Sidebar />
-            <TokenSidebar />           
+            <TokenSidebar />
+            <AddressModal />
         </div>
     )
 }

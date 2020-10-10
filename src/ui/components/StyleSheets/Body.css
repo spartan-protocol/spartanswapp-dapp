@@ -69,3 +69,7 @@ wallet {
     font-size: 25px;
     text-align: center;
 }
+
+.leftAlign {
+    text-align: left;
+}

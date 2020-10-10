@@ -10,11 +10,9 @@ import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
 import { Center, Button, H1, H2, H3, LabelWhite, P } from '../components/elements';
 import { card, approvalNotification, swapNotification } from '../components/common';
 import 'antd/dist/antd.css'
-import { openBar } from '../layout/TokenSidebar'
+import { openAddress } from '../layout/AddressModal'
 import spinner from '../../assets/images/spinner.svg'
 import { SpinnerWrapper } from '../layout/theme';
-
-
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
@@ -82,7 +80,6 @@ const SimpleSwap = (props) => {
     }, [context.connected])
 
     /* _________________________________FUNCTIONS_______________________________________________________ */
-
 
     const getData = async () => {
         let tokenDetails = await getTokenData(AddressFrom, context.walletData)
@@ -227,7 +224,7 @@ const SimpleSwap = (props) => {
 
     const InputTokenDropDown = () => {
         return (
-            <Button type={'third'} style={{ width: 110 }} onClick={''}>{GetIcon(inputTokenData.address)}&nbsp; {inputTokenData.symbol} <DownOutlined /></Button>
+            <Button type={'third'} style={{ width: 110 }} onClick={openAddress}>{GetIcon(inputTokenData.address)}&nbsp; {inputTokenData.symbol} <DownOutlined /></Button>
         )
     }
 
@@ -238,7 +235,7 @@ const SimpleSwap = (props) => {
     }    
 
     const GetIcon = (address) => {
-        return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + address + "/info/logo.png"} width='10px' height='10px' />
+        return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + address + "/info/logo.png"} width='40px' height='40px' />
     }
 
     /*______________________________________________________________________________________________*/
@@ -278,7 +275,8 @@ const SimpleSwap = (props) => {
                                                 bordered={false}
                                                 placeholder={'0.0'}
                                                 onChange={(e) => onInputAmountChange(e.target.value)}
-                                                style={{ width: 220, height: 30 }}></Input><InputTokenDropDown />
+                                                style={{ width: 220, height: 30, fontSize: 30 }}></Input>
+                                            <InputTokenDropDown />
                                             < br />                                           
                                         </div>
                                         <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
@@ -303,8 +301,8 @@ const SimpleSwap = (props) => {
                                                 bordered={false}
                                                 placeholder={'0.0'}
                                                 onChange={(e) => onOutputChange(e.target.value)}
-                                                style={{ width: 220 }}></Input><OutputTokenDropDown />                                            
-                                            < br />
+                                                style={{ width: 220, fontSize: 30 }}></Input><OutputTokenDropDown />                                            
+                                            < br />                                            
                                             <P>Output: </P>
                                         </div>
                                     </div>
@@ -318,15 +316,15 @@ const SimpleSwap = (props) => {
                         <p> </p>}
                     {
                         !approval && context.connected &&
-                        <Button style={{ width: 150 }} onClick={approve}>APPROVE</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={approve}>APPROVE</Button>
                     }
                     {
                         approval && !startTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
                     }
 
                     <br /><br />

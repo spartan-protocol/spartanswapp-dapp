@@ -494,6 +494,21 @@ export const TokenSidebar = (props) => {
     )
 }
 
+export const ModalTable = (props) => {
+
+    return (
+        <div>
+            <div class='leftAlign'>
+                {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
+                {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='20px' height='20px' /><br /></>}
+                {props.address === SPARTA_ADDR && <><img src='favicon.png' width='20px' height='20px' /><br /></>}
+                {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img src={'../../assets/icons/Smartchain/assets/' + props.address + '/logo.png'} width='20px' height='20px' /><br /></>}
+                <Label size={props.size / 1.8}>{props.symbol}</Label><br />
+            </div>
+        </div>
+    )
+}
+
 
 
 export const CDPDetails = (props) => {
