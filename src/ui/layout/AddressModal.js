@@ -4,11 +4,12 @@ import { Button, Input, Tabs, Modal, Table } from 'antd'
 import { H1, H2, Center, HR } from '../components/elements'
 //import '../../App.css'
 import 'antd/dist/antd.css'
-import { getListedTokens, getAlltokens, getTokenData, getListedPools, getPoolsData } from '../../client/web3';
+import { getListedTokens, getAlltokens, getTokenData, getListedPools, getPoolsData, filterTokensByPoolSelection } from '../../client/web3';
 import { Context } from '../../context'
 import { ModalTable } from '../components/common'
 
 const { TabPane } = Tabs;
+
 
 function callback(key) {
     console.log(key);
@@ -23,9 +24,8 @@ export function closeAddress() {
 }
 
 
-const TokenTable = () => {
+const TokenTable = () => {   
     const context = useContext(Context)
-
     useEffect(() => {
         // updateWallet()
 
@@ -36,8 +36,10 @@ const TokenTable = () => {
             render: (record) => (
                 <div>
                     <ModalTable
+                        address={record.address}
                         symbol={record.symbol}
-                        size={35} />
+                        size={35}
+                    />
                 </div>
             )
         }
@@ -46,26 +48,33 @@ const TokenTable = () => {
     return (
         <div>
             <Table
+                id="Token"
                 dataSource={context.poolsData}
                 showHeader={false}
                 pagination={false}
                 columns={columns}
-                rowKey="symbol" />
+                rowKey="symbol"
+            />
         </div>
     )
 }
 
+const TokenSearch = (e) => {
+    var Query, filter, pools, symbol
+    
+
+}
+
 
 export const AddressModal = (props) => {
-
     return (
         <div id="myModal" class="modal">
             <div class="modal-content">
-                <Button onclick={closeAddress}>&times;</Button><br />
+                <Button onClick={closeAddress}>&times;</Button><br />
                 <br />
                 <H2>Tokens</H2>
                 <br />
-                <Input placeholder={'Enter a token symbol'} onChange={''}></Input>
+                <Input id="TokenSearchBar" placeholder={'Enter a token symbol'} onChange={''}></Input>
                 <br /><br />
                 <HR></HR>
                 <TokenTable />
