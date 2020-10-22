@@ -3,16 +3,17 @@ import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../context'
 import { MenuOutlined, DownOutlined } from '@ant-design/icons'
-import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData } from '../../client/web3'
+import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData, getAlltokens } from '../../client/web3'
 import { Input, notification, message, Modal } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, one } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
 import { Center, Button, H1, H2, H3, LabelWhite, P } from '../components/elements';
 import { card, approvalNotification, swapNotification } from '../components/common';
 import 'antd/dist/antd.css'
-import { openAddress } from '../layout/AddressModal'
+import { openAddress, closeAddress } from '../layout/AddressModal'
 import spinner from '../../assets/images/spinner.svg'
 import { SpinnerWrapper } from '../layout/theme';
+import { white } from 'color-name';
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
@@ -96,7 +97,6 @@ const SimpleSwap = (props) => {
     const getSwapData = async (inputAmount, inputTokenData, outputTokenData, pool) => {
 
         var output, slip
-        //console.log(formatBN(inputAmount))
         output = getSwapOutput(inputAmount, pool, false)
         slip = getSwapSlip(inputAmount, pool, false)
 
@@ -109,7 +109,6 @@ const SimpleSwap = (props) => {
             outputSymbol: outputTokenData.symbol,
             slip: formatBN(slip)
         }
-        console.log(swapData)
         return swapData
     }
 
@@ -139,7 +138,6 @@ const SimpleSwap = (props) => {
                 setApproval(false)
                 setAssetFrom(e)
                 let token = await getTokenData(e, context.walletData)
-                console.log(token)
                 setInputTokenData(token)
                 checkApproval(AddressFrom)
                 setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
@@ -232,13 +230,20 @@ const SimpleSwap = (props) => {
         return (
             <Button type={'third'} style={{ width: 110 }} onClick={''}>{GetIcon(outputTokenData.address)}&nbsp; {outputTokenData.symbol} <DownOutlined /></Button>
         )
-    }    
-
-    const GetIcon = (address) => {
-        return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + address + "/info/logo.png"} width='40px' height='40px' />
     }
 
-    /*______________________________________________________________________________________________*/
+    const GetIcon = (address) => {
+        if (address == SPARTA_ADDR) {
+            return <img src={'favicon.png'} width='40px' height='40px' />
+        }
+        else if (address == BNB_ADDR || props.symbol == 'BNB') {
+            return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' />
+        }
+        else {
+            return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + address + "/logo.png"} width='25px' height='25px' />
+        }
+    }
+    /*__________________________________________________________________________________________________________________*/
 
     return (
         <div>
@@ -253,7 +258,6 @@ const SimpleSwap = (props) => {
                                 <br />
                                 <p>Connecting Metamask...</p>
                                 <p>Ensure your Metamask is connected to the BSC Mainnet to use this application</p>
-
                                 <p>Taking a while? Try refreshing the page</p>
                                 <br />
                                 <SpinnerWrapper src={spinner} />
@@ -275,9 +279,9 @@ const SimpleSwap = (props) => {
                                                 bordered={false}
                                                 placeholder={'0.0'}
                                                 onChange={(e) => onInputAmountChange(e.target.value)}
-                                                style={{ width: 220, height: 30, fontSize: 30 }}></Input>
-                                            <InputTokenDropDown />
-                                            < br />                                           
+                                                style={{ width: 200, height: 30, fontSize: 30, color: white, textAlign: 'left' }}></Input>
+                                            <InputTokenDropDown />&nbsp;
+                                            < br />
                                         </div>
                                         <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
                                     </div>
@@ -300,9 +304,10 @@ const SimpleSwap = (props) => {
                                             <Input
                                                 bordered={false}
                                                 placeholder={'0.0'}
-                                                onChange={(e) => onOutputChange(e.target.value)}
-                                                style={{ width: 220, fontSize: 30 }}></Input><OutputTokenDropDown />                                            
-                                            < br />                                            
+                                                onChange={''}
+                                                style={{ width: 200, fontSize: 30, color: white }}></Input>
+                                            <OutputTokenDropDown />&nbsp;
+                                            < br />
                                             <P>Output: </P>
                                         </div>
                                     </div>

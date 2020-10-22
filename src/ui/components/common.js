@@ -463,7 +463,7 @@ export const CoinRow = (props) => {
                         {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' /><br /></>}
                         {props.address === SPARTA_ADDR && <><img src='favicon.png' width='40px' height='40px' /><br /></>}
                         {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><Image src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/" + props.address + "info/logo.png"} width='40px' height='40px' /><br /></>}
-                    <Label size={props.size / 1.8}>{props.symbol}</Label>
+                        <Label size={props.size / 1.8}>{props.symbol}</Label>
                     </div>
                 </div>
                 <div class='column'>
@@ -495,15 +495,23 @@ export const TokenSidebar = (props) => {
 }
 
 export const ModalTable = (props) => {
-
     return (
         <div>
             <div class='leftAlign'>
-                {/*<span><ColourCoin symbol={props.symbol} size={props.size} /></span>&nbsp;*/}
-                {props.address === BNB_ADDR && <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='20px' height='20px' /><br /></>}
-                {props.address === SPARTA_ADDR && <><img src='favicon.png' width='20px' height='20px' /><br /></>}
-                {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR && <><img src={'../../assets/icons/Smartchain/assets/' + props.address + '/logo.png'} width='20px' height='20px' /><br /></>}
-                <Label size={props.size / 1.8}>{props.symbol}</Label><br />
+                &nbsp;
+                {props.address === BNB_ADDR &&
+                    <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"}
+                        width='25px' height='25px' />
+                    </>}
+                {props.address === SPARTA_ADDR &&
+                    <><img src='favicon.png'
+                        width='25px' height='25px' />
+                    </>}
+                {props.address !== SPARTA_ADDR && props.address !== BNB_ADDR &&
+                    <><img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + props.address + "/logo.png"}
+                        width='25px' height='25px' />
+                    </>}
+                <Label size={props.size / 1.8}> {props.symbol}</Label><br />
             </div>
         </div>
     )
@@ -589,3 +597,4 @@ export const CDPPane = (props) => {
         </div>
     )
 }
+

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import styled from 'styled-components'
@@ -38,7 +38,7 @@ const BodyWrapper = styled.div`
   overflow: auto;
   min-height: 10vh;
   background-position: 0px 0vh;
-  background-color: #2e3338;
+  background-color: #141414;
   background-repeat: no-repeat;
 }
 `
