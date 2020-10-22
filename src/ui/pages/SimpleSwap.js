@@ -109,7 +109,6 @@ const SimpleSwap = (props) => {
             outputSymbol: outputTokenData.symbol,
             slip: formatBN(slip)
         }
-        console.log(swapData)
         return swapData
     }
 
@@ -139,7 +138,6 @@ const SimpleSwap = (props) => {
                 setApproval(false)
                 setAssetFrom(e)
                 let token = await getTokenData(e, context.walletData)
-                console.log(token)
                 setInputTokenData(token)
                 checkApproval(AddressFrom)
                 setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
@@ -242,10 +240,10 @@ const SimpleSwap = (props) => {
             return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' />
         }
         else {
-            return <img src={"../../assets/icons/Smartchain/assets/" + address + "/logo.png"}  width='40px' height='40px' />
+            return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + address + "/logo.png"} width='25px' height='25px' />
         }
     }
-    /*______________________________________________________________________________________________*/
+    /*__________________________________________________________________________________________________________________*/
 
     return (
         <div>
@@ -260,7 +258,6 @@ const SimpleSwap = (props) => {
                                 <br />
                                 <p>Connecting Metamask...</p>
                                 <p>Ensure your Metamask is connected to the BSC Mainnet to use this application</p>
-
                                 <p>Taking a while? Try refreshing the page</p>
                                 <br />
                                 <SpinnerWrapper src={spinner} />
@@ -307,8 +304,9 @@ const SimpleSwap = (props) => {
                                             <Input
                                                 bordered={false}
                                                 placeholder={'0.0'}
-                                                onChange={(e) => onOutputChange(e.target.value)}
-                                                style={{ width: 200, fontSize: 30, color: white }}></Input><OutputTokenDropDown />&nbsp;
+                                                onChange={''}
+                                                style={{ width: 200, fontSize: 30, color: white }}></Input>
+                                            <OutputTokenDropDown />&nbsp;
                                             < br />
                                             <P>Output: </P>
                                         </div>

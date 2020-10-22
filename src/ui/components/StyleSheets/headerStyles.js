@@ -12,7 +12,7 @@ export const MigrateBanner = styled.div`
   max-height: 60px;
   display: flex;
   justify-content: center;
-  background-color: #2e3338;
+  background-color: #141414;
   color: ${ Colour().white};
   font-weight: 400;
   text-align: center;
@@ -48,7 +48,7 @@ export const MigrateBannerSmall = styled(MigrateBanner)`
 export const MigrateBannerLarge = styled(MigrateBanner)`
   @media (max-width: 960px) {
     display: none;
-    color: '#000000';
+    color: 'rgba(0,0,0, 0.1)';
   }
 `
 

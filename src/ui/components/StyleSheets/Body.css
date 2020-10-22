@@ -73,3 +73,11 @@ wallet {
 .leftAlign {
     text-align: left;
 }
+
+.rightAlign {
+    text-align: center;
+}
+
+.buttonSize {
+    width: 160px;
+}

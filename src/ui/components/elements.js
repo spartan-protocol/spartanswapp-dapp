@@ -230,6 +230,22 @@ export const P = (props) => {
     )
 }
 
+export const Font = (props) => {
+    let styles = { ...props.style || {} }
+    styles.fontSize = "30px"
+    styles.color = Colour().white
+    styles.display = "block"
+
+    if (props.size) {
+        styles.fontSize = props.size
+    }
+    return (
+        <span style={styles}>
+            {props.children}
+        </span>
+    )
+}
+
 export const Center = (props) => (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
         {props.children}
@@ -276,13 +292,19 @@ export const Button = (props) => {
     }
     else if (props.type === "third") {
         styles.color = Colour().white
-        styles.backgroundColor = '#1b1e1f'
-        styles.borderColor = '#1b1e1f'
+        styles.backgroundColor = '#131414'
+        styles.borderColor = '#131414'
     }
     else if (props.type === "wallet") {
         styles.color = Colour().white
         styles.backgroundColor = '#a80005'
         styles.borderColor = '#a80005'
+    }
+    else if (props.type === "tableToken") {
+        styles.color = 'rgb(0,0,0, 0)'
+        styles.backgroundColor = 'rgb(0,0,0, 0)'
+        styles.borderColor = 'rgb(0,0,0, 0)'
+        
     } else {
         styles.color = Colour().white
         styles.backgroundColor = Colour().gold

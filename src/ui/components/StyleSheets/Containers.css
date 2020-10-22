@@ -1,7 +1,7 @@
 
 .outerContainer {
     color: var(--textColor);
-    background-color: #141414;
+    background-color: #0a0a0a;
     margin: auto;
     width: 430px;
     border-radius: 0.8rem;
@@ -10,7 +10,7 @@
 
 .container2 {
     color: var(--textColor);
-    background-color: #1b1e1f;
+    background-color: #131414;
     margin-left: 28px;
     margin-right: 28px;
     margin-top: 15px;
