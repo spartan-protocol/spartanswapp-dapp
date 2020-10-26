@@ -49,9 +49,8 @@ const Headbar = (props) => {
             context.setContext({ 'tokenDetailsArray': tokenDetailsArray })
 
             //message.loading('Loading wallet data', 3);
-            let walletData = await getWalletData(account, tokenDetailsArray)
+            let walletData = context.walletData ? context.walletData : await getWalletData(account, tokenDetailsArray)
             context.setContext({ 'walletData': walletData })
-            console.log(walletData)
 
             let poolArray = context.poolArray ? context.poolArray : await getListedPools()
             context.setContext({ 'poolArray': poolArray })
@@ -71,7 +70,6 @@ const Headbar = (props) => {
     }
 
     const ethEnabled = () => {
-        console.log('connecting')
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum);
             window.ethereum.enable();
@@ -121,7 +119,7 @@ const Headbar = (props) => {
             </HeaderFrame>
             <Sidebar />
             <TokenSidebar />
-            <AddressModal />
+            
         </div>
     )
 }

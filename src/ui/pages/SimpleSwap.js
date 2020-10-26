@@ -1,22 +1,32 @@
 import { Container } from '../layout/theme/components'
 import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import React, { useState, useEffect, useContext } from 'react'
+import ReactDOM from 'react-dom'
 import { Context } from '../../context'
-import { MenuOutlined, DownOutlined } from '@ant-design/icons'
-import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData, getAlltokens } from '../../client/web3'
-import { Input, notification, message, Modal } from 'antd';
-import { bn, formatBN, convertFromWei, convertToWei, one } from '../../utils'
+import { MenuOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons'
+import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getAssets, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData, getAlltokens } from '../../client/web3'
+import { Input, notification, Menu, Dropdown, Table } from 'antd';
+import { bn, formatBN, convertFromWei, convertToWei, one, getAddressShort } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
-import { Center, Button, H1, H2, H3, LabelWhite, P } from '../components/elements';
-import { card, approvalNotification, swapNotification } from '../components/common';
+import { Center, Button, H1, H2, H3, LabelWhite, P, HR } from '../components/elements';
+import { card, approvalNotification, swapNotification, ModalTable } from '../components/common';
 import 'antd/dist/antd.css'
-import { openAddress, closeAddress } from '../layout/AddressModal'
 import spinner from '../../assets/images/spinner.svg'
 import { SpinnerWrapper } from '../layout/theme';
 import { white } from 'color-name';
 
 //const { TabPane } = Tabs;
 var utils = require('ethers').utils;
+
+function openAddress() {
+    document.getElementById("myModal").style.display = "block";
+}
+
+function closeAddress() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+
 
 const SimpleSwap = (props) => {
 
@@ -67,6 +77,11 @@ const SimpleSwap = (props) => {
         'balance': 0,
         'address': BNB_ADDR
     })
+    const [TokenSelect, setTokenSelect] = useState({
+        'symbol': '',
+        'address': ''
+    })
+
     /*_________________________________________________________________*/
 
     const [approval, setApproval] = useState(false)
@@ -83,14 +98,33 @@ const SimpleSwap = (props) => {
     /* _________________________________FUNCTIONS_______________________________________________________ */
 
     const getData = async () => {
-        let tokenDetails = await getTokenData(AddressFrom, context.walletData)
-        setInputTokenData(tokenDetails)
+        const account = (await window.web3.eth.getAccounts())[0];
+
+        let assetArray = context.assetArray ? context.assetArray : await getAssets()
+        context.setContext({ 'assetArray': assetArray })
+
         let tokenArray = await getListedTokens()
         context.setContext({ 'tokenArray': tokenArray })
+
         let poolArray = await getListedPools()
         context.setContext({ 'poolArray': poolArray })
         context.setContext({ 'poolsData': await getPoolsData(tokenArray) })
-        setPool(getPoolData(AddressTo, context.poolsData))
+
+        let allTokens = assetArray.concat(tokenArray)
+
+        var sortedTokens = [...new Set(allTokens)].sort()
+
+        let tokenDetailsArray = context.tokenDetailsArray ? context.tokenDetailsArray : await getTokenDetails(account, sortedTokens)
+        context.setContext({ 'tokenDetailsArray': tokenDetailsArray })
+
+        let walletData = await getWalletData(account, tokenDetailsArray)
+        context.setContext({ 'walletData': walletData })
+        console.log(walletData)
+
+        let tokenDetails = await getTokenData(AddressFrom, context.walletData)
+        setInputTokenData(tokenDetails)
+
+        setPool(await getPoolData(AddressTo, context.poolsData))
         setSwapData(await getSwapData(inputTokenData.balance, inputTokenData, outputTokenData, pool))
     }
 
@@ -129,6 +163,8 @@ const SimpleSwap = (props) => {
         let maxBalance = inputTokenData.balance
         onInputAmountChange(maxBalance)
     }
+
+
 
     /* ______________________________________________INPUTS __________________________________________________________ */
 
@@ -220,13 +256,14 @@ const SimpleSwap = (props) => {
 
     /* __________________________________________________________________________________________________ */
 
-    const InputTokenDropDown = () => {
+    
+    const InputTokenModal = () => {
         return (
             <Button type={'third'} style={{ width: 110 }} onClick={openAddress}>{GetIcon(inputTokenData.address)}&nbsp; {inputTokenData.symbol} <DownOutlined /></Button>
         )
     }
 
-    const OutputTokenDropDown = () => {
+    const OutputTokenModal = () => {
         return (
             <Button type={'third'} style={{ width: 110 }} onClick={''}>{GetIcon(outputTokenData.address)}&nbsp; {outputTokenData.symbol} <DownOutlined /></Button>
         )
@@ -240,15 +277,89 @@ const SimpleSwap = (props) => {
             return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png"} width='40px' height='40px' />
         }
         else {
-            return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + address + "/logo.png"} width='25px' height='25px' />
+            return <img src={"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/" + address + "/logo.png"} width='40px' height='40px' />
         }
     }
+
+    const AddressModal = (props) => {
+
+        const context = useContext(Context)
+
+        const returnSelected = async (address, symbol) => {
+            let tokenData = await getTokenData(address, context.walletData)
+            setInputTokenData(tokenData)
+        }
+
+
+        const TokenTable = () => {
+
+            const check = (e) => {
+                if (e.length === 0 || e === null) {
+                    return context.poolsData
+                    console.log(context.poolsData)
+                }
+                else {
+                    var pools = context.poolsData
+                    for (let i = 0; i < pools.length; i++) {
+                        if (e.toUpperCase() === pools[i].symbol) {
+                            var match = pools[i]
+                        }
+                    }
+                }
+            }
+            const columns = [
+                {
+                    render: (record) => (
+                        <Button onClick={() => returnSelected(record.address)}>
+                            <ModalTable
+                                address={record.address}
+                                symbol={record.symbol}
+                                size={35} />
+                        </Button>
+                    )
+                }
+            ]
+            return (
+                <div>
+                    <div>
+                        <Input
+                            id="search_input"
+                            placeholder={'Enter a token symbol'}
+                            onChange={e => check(e.target.value)}
+                            value=''
+                        /> <Button><SearchOutlined /></Button></div>
+                    <br /><br />
+                    <HR></HR>
+                    <Table
+                        dataSource={context.poolsData}
+                        showHeader={false}
+                        pagination={false}
+                        columns={columns}
+                        rowKey="symbol"
+                    />
+                </div>
+            )
+        }
+
+        return (
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <Button onClick={closeAddress}>&times;</Button><br />
+                    <br />
+                    <TokenTable />
+                </div>
+            </div>
+        )
+    }
+
+
     /*__________________________________________________________________________________________________________________*/
 
     return (
         <div>
             <div className='outerContainer'>
                 <Container>
+                    <AddressModal />
                     <br />
                     {!context.connected &&
                         <>
@@ -271,19 +382,22 @@ const SimpleSwap = (props) => {
                         <div className='container2'>
                             <Center>
                                 <Container>
-                                    < br />
-                                    <H2>Input</H2>
+                                    <div className='align2'>
+                                        <H2>Input</H2>
+                                    </div>
                                     <div>
-                                        <div className='centerObject2'>
+                                        <div className='rightAlign'>
+                                            <InputTokenModal />&nbsp;
+                                        </div>
+                                        <div className='leftAlign'>
                                             <Input
                                                 bordered={false}
-                                                placeholder={'0.0'}
+                                                placeholder='0.0'
                                                 onChange={(e) => onInputAmountChange(e.target.value)}
-                                                style={{ width: 200, height: 30, fontSize: 30, color: white, textAlign: 'left' }}></Input>
-                                            <InputTokenDropDown />&nbsp;
-                                            < br />
+                                                style={{ height: 30, fontSize: 30, color: 'white' }}
+                                            />
                                         </div>
-                                        <P>Balance: {convertFromWei(inputTokenData.balance)} {inputTokenData.symbol}</P>
+                                        < br />
                                     </div>
                                 </Container>
                             </Center>
@@ -297,19 +411,22 @@ const SimpleSwap = (props) => {
                         <div className='container2'>
                             <Center>
                                 <Container>
-                                    < br />
-                                    <H2>Output</H2>
+                                    <div className='align2'>
+                                        <H2>Output</H2>
+                                    </div>
                                     <div>
-                                        <div>
+                                        <div className='rightAlign'>
+                                            <OutputTokenModal />&nbsp;
+                                        </div>
+                                        <div className='leftAlign'>
                                             <Input
                                                 bordered={false}
-                                                placeholder={'0.0'}
-                                                onChange={''}
-                                                style={{ width: 200, fontSize: 30, color: white }}></Input>
-                                            <OutputTokenDropDown />&nbsp;
-                                            < br />
-                                            <P>Output: </P>
+                                                placeholder='0.0'
+                                                value={''}
+                                                style={{ height: 30, fontSize: 30, color: 'white' }}
+                                            />
                                         </div>
+                                        < br />
                                     </div>
                                 </Container>
                             </Center>
@@ -321,15 +438,15 @@ const SimpleSwap = (props) => {
                         <p> </p>}
                     {
                         !approval && context.connected &&
-                        <Button type={'wallet'} style={{ width: 150 }} onClick={approve}>APPROVE</Button>
+                        <Button type={'wallet'} style={{ width: 300, height: 40 }} onClick={approve}>APPROVE</Button>
                     }
                     {
                         approval && !startTx &&
-                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 300, height: 40 }} onClick={swap}>SWAP</Button>
                     }
                     {
                         approval && startTx && !endTx &&
-                        <Button type={'wallet'} style={{ width: 150 }} onClick={swap}>SWAP</Button>
+                        <Button type={'wallet'} style={{ width: 300, height: 40 }} onClick={swap}>SWAP</Button>
                     }
 
                     <br /><br />
@@ -352,4 +469,5 @@ const SimpleSwap = (props) => {
         </div>
     )
 }
+
 export default SimpleSwap

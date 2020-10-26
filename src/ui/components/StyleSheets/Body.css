@@ -14,6 +14,7 @@
     float: left;
     width: 50%;
     padding: 0px;
+
 }
 
 .col-container {
@@ -21,6 +22,7 @@
     width: 350px; /* Set full-width to expand the whole page */
     margin: auto;
     height: 120px;
+
 }
 
 .col {
@@ -58,6 +60,7 @@
 .flexbox_1 {
     display: flex;
     justify-content: center;
+
 }
 
 .centerObject2 {
@@ -71,13 +74,21 @@ wallet {
 }
 
 .leftAlign {
-    text-align: left;
+    margin-right: 30%;
+    margin-top: -8%;
 }
 
 .rightAlign {
-    text-align: center;
+    margin-left: 60%;
+    margin-top: 3%;
 }
 
 .buttonSize {
     width: 160px;
 }
+
+.align2 {
+    margin-left: 3%;
+    margin-top: 4%;
+}
+

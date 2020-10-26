@@ -2,6 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\src",
+    "\\src\\client",
     "\\src\\ui",
     "\\src\\ui\\components",
     "\\src\\ui\\components\\Header",
@@ -9,6 +10,6 @@
     "\\src\\ui\\layout",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\ui\\components\\StyleSheets\\Modal.css",
+  "SelectedNode": "\\src\\client\\web3.js",
   "PreviewInSolutionExplorer": false
 }
