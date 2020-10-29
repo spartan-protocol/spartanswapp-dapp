@@ -4,12 +4,12 @@ import React, { useState, useEffect, useContext } from 'react'
 import ReactDOM from 'react-dom'
 import { Context } from '../../context'
 import { MenuOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons'
-import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getAssets, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData, getAlltokens } from '../../client/web3'
+import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getAssets, getSpartaContract, getTokenContract, getTokenDetails, getTokenData, getPoolsData, getListedTokens, getListedPools, getPoolsContract, getRouterContract, ROUTER_ADDR, getWalletData, getPool, getPoolData, getAlltokens, getTokenSymbol } from '../../client/web3'
 import { Input, notification, Menu, Dropdown, Table } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, one, getAddressShort } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
 import { Center, Button, H1, H2, H3, LabelWhite, P, HR } from '../components/elements';
-import { card, approvalNotification, swapNotification, ModalTable } from '../components/common';
+import { card, approvalNotification, swapNotification, ModalTable, TokenSymbol } from '../components/common';
 import 'antd/dist/antd.css'
 import spinner from '../../assets/images/spinner.svg'
 import { SpinnerWrapper } from '../layout/theme';
@@ -25,8 +25,6 @@ function openAddress() {
 function closeAddress() {
     document.getElementById("myModal").style.display = "none";
 }
-
-
 
 const SimpleSwap = (props) => {
 
@@ -77,11 +75,19 @@ const SimpleSwap = (props) => {
         'balance': 0,
         'address': BNB_ADDR
     })
-    const [TokenSelect, setTokenSelect] = useState({
-        'symbol': '',
-        'address': ''
-    })
+    const [inputSymbol, setInputSymbol] = useState({
+        'symbol': 'XXX',
+     })
 
+    const [outputSymbol, setOutputSymbol] = useState({
+        'symbol': 'XXX',
+     })
+
+    const [key, setKey] = useState({
+        'key': '1',
+     })
+
+    
     /*_________________________________________________________________*/
 
     const [approval, setApproval] = useState(false)
@@ -98,7 +104,12 @@ const SimpleSwap = (props) => {
     /* _________________________________FUNCTIONS_______________________________________________________ */
 
     const getData = async () => {
+        setInputSymbol('SPARTA')
+        setOutputSymbol('BNB')
+
         const account = (await window.web3.eth.getAccounts())[0];
+        let tokenDetails = await getTokenData(AddressFrom, context.walletData)
+        setInputTokenData(tokenDetails)
 
         let assetArray = context.assetArray ? context.assetArray : await getAssets()
         context.setContext({ 'assetArray': assetArray })
@@ -120,9 +131,6 @@ const SimpleSwap = (props) => {
         let walletData = await getWalletData(account, tokenDetailsArray)
         context.setContext({ 'walletData': walletData })
         console.log(walletData)
-
-        let tokenDetails = await getTokenData(AddressFrom, context.walletData)
-        setInputTokenData(tokenDetails)
 
         setPool(await getPoolData(AddressTo, context.poolsData))
         setSwapData(await getSwapData(inputTokenData.balance, inputTokenData, outputTokenData, pool))
@@ -257,19 +265,8 @@ const SimpleSwap = (props) => {
     /* __________________________________________________________________________________________________ */
 
     
-    const InputTokenModal = () => {
-        return (
-            <Button type={'third'} style={{ width: 110 }} onClick={openAddress}>{GetIcon(inputTokenData.address)}&nbsp; {inputTokenData.symbol} <DownOutlined /></Button>
-        )
-    }
 
-    const OutputTokenModal = () => {
-        return (
-            <Button type={'third'} style={{ width: 110 }} onClick={''}>{GetIcon(outputTokenData.address)}&nbsp; {outputTokenData.symbol} <DownOutlined /></Button>
-        )
-    }
-
-    const GetIcon = (address) => {
+    function GetIcon(address) {
         if (address == SPARTA_ADDR) {
             return <img src={'favicon.png'} width='40px' height='40px' />
         }
@@ -281,38 +278,59 @@ const SimpleSwap = (props) => {
         }
     }
 
+    function setInputSelection() {
+        openAddress()
+        setKey('1')
+        console.log(key)  
+        
+    }
+    function setOutputSelection() {
+        openAddress()
+        setKey('2')
+        console.log(key)        
+    }
+    
+
+    function setData(address, symbol) {
+        try {
+            if (key === '1') {
+                setApproval(false)
+                setAssetFrom(address)
+                setInputSymbol(symbol)
+                checkApproval(AddressFrom)
+                console.log(address)
+                console.log(symbol)
+                console.log(AddressFrom)
+            }
+            else if (key === '2') {
+                setAssetTo(address)
+                setOutputSymbol(symbol)
+                console.log(address)
+                console.log(symbol)
+                console.log(AddressTo)
+            }
+            else {
+                console.log(key)
+            }
+            return
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
     const AddressModal = (props) => {
 
         const context = useContext(Context)
-
-        const returnSelected = async (address, symbol) => {
-            let tokenData = await getTokenData(address, context.walletData)
-            setInputTokenData(tokenData)
-        }
-
-
         const TokenTable = () => {
-
-            const check = (e) => {
-                if (e.length === 0 || e === null) {
-                    return context.poolsData
-                    console.log(context.poolsData)
-                }
-                else {
-                    var pools = context.poolsData
-                    for (let i = 0; i < pools.length; i++) {
-                        if (e.toUpperCase() === pools[i].symbol) {
-                            var match = pools[i]
-                        }
-                    }
-                }
-            }
+            
             const columns = [
                 {
                     render: (record) => (
-                        <Button onClick={() => returnSelected(record.address)}>
+                        <Button
+                            onClick={() => setData(record.address, record.symbol)}>
                             <ModalTable
-                                address={record.address}
+                                address={record.address} 
                                 symbol={record.symbol}
                                 size={35} />
                         </Button>
@@ -325,10 +343,8 @@ const SimpleSwap = (props) => {
                         <Input
                             id="search_input"
                             placeholder={'Enter a token symbol'}
-                            onChange={e => check(e.target.value)}
-                            value=''
+                            onChange={''}
                         /> <Button><SearchOutlined /></Button></div>
-                    <br /><br />
                     <HR></HR>
                     <Table
                         dataSource={context.poolsData}
@@ -351,7 +367,6 @@ const SimpleSwap = (props) => {
             </div>
         )
     }
-
 
     /*__________________________________________________________________________________________________________________*/
 
@@ -387,7 +402,7 @@ const SimpleSwap = (props) => {
                                     </div>
                                     <div>
                                         <div className='rightAlign'>
-                                            <InputTokenModal />&nbsp;
+                                            <Button type={'third'} style={{ width: 110 }} icon={GetIcon(AddressFrom)} onClick={() => setInputSelection()}><>&nbsp; {inputSymbol.toString()} <DownOutlined /></></Button>
                                         </div>
                                         <div className='leftAlign'>
                                             <Input
@@ -416,7 +431,7 @@ const SimpleSwap = (props) => {
                                     </div>
                                     <div>
                                         <div className='rightAlign'>
-                                            <OutputTokenModal />&nbsp;
+                                            <Button type={'third'} style={{ width: 110 }} icon={GetIcon(AddressTo)} onClick={() => setOutputSelection()}><>&nbsp; {outputSymbol.toString()} <DownOutlined /></></Button>&nbsp;
                                         </div>
                                         <div className='leftAlign'>
                                             <Input
@@ -457,10 +472,12 @@ const SimpleSwap = (props) => {
                     <div className="bottomContainer">
                         <div className="centerObject2">
                             <Container>
-                                <br />
-                                <P>Slippage: </P>
-                                <P>Fee: </P>
-                                <br />
+                            <P>Slippage: </P>
+                            <P>Fee: </P>
+                            <P>Sending Token Address: {AddressFrom.toString()}</P>
+                            <P>Receiving Token Address: {AddressTo.toString()}</P>
+                           < br/>
+                           
                             </Container>
                         </div>
                     </div>
