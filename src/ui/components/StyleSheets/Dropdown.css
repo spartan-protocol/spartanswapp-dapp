@@ -1,10 +1,18 @@
-#components-dropdown-demo-arrow .ant-btn {
-    margin-right: 8px;
-    margin-bottom: 8px;
+.dropdown-btn > .ant-dropdown-trigger {
+    border: 0px solid red;
+}
+    .dropdown-btn > .ant-dropdown-trigger > span {
+        background-color: #131414;
+        color: white;
+    }
+.dropdown-btn > .ant-dropdown-trigger {
+    background-color: #131414 ;
+    color: white;
 }
 
-.ant-row-rtl #components-dropdown-demo-arrow .ant-btn {
-    margin-right: 0;
-    margin-bottom: 8px;
-    margin-left: 8px;
+.dropdown-btn > .ant-btn {
+    color: white;
+}
+.dropdown-btn > .ant-btn:hover {
+    color: white;
 }

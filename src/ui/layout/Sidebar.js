@@ -51,7 +51,6 @@ const Sidebar = (props) => {
             //message.loading('Loading wallet data', 3);
             let walletData = await getWalletData(account, tokenDetailsArray)
             context.setContext({ 'walletData': walletData })
-            console.log(walletData)
 
             let poolArray = context.poolArray ? context.poolArray : await getListedPools()
             context.setContext({ 'poolArray': poolArray })
@@ -71,7 +70,6 @@ const Sidebar = (props) => {
     }
 
     const ethEnabled = () => {
-        console.log('connecting')
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum);
             window.ethereum.enable();

@@ -299,6 +299,7 @@ export const Button = (props) => {
         styles.color = Colour().white
         styles.backgroundColor = '#a80005'
         styles.borderColor = '#a80005'
+        styles.borderRadius = '1.25rem'
     }
     else if (props.type === "tableToken") {
         styles.color = 'rgb(0,0,0, 0)'

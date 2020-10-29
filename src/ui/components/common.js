@@ -495,6 +495,7 @@ export const TokenSidebar = (props) => {
 }
 
 export const ModalTable = (props) => {
+
     return (
         <div>
             <div class='leftAlign'>
