@@ -291,12 +291,14 @@ const SimpleSwap = (props) => {
     }
     
 
-    function setData(address, symbol) {
+    async function setData(address, symbol) {
         try {
             if (key === '1') {
                 setApproval(false)
                 setAssetFrom(address)
                 setInputSymbol(symbol)
+                let token = await getTokenData(address, context.walletData)
+                setInputTokenData(token)
                 checkApproval(AddressFrom)
                 console.log(address)
                 console.log(symbol)
