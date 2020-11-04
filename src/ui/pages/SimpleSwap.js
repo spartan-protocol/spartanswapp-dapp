@@ -8,7 +8,7 @@ import { SPARTA_ADDR, BNB_ADDR, WBNB_ADDR, getAssets, getSpartaContract, getToke
 import { Input, notification, Menu, Dropdown, Table } from 'antd';
 import { bn, formatBN, convertFromWei, convertToWei, one, getAddressShort } from '../../utils'
 import { getSwapOutput, getSwapSlip, getSwapFee } from '../../math'
-import { Center, Button, H1, H2, H3, LabelWhite, P, HR } from '../components/elements';
+import { Center, Button, H1, H2, H3, LabelWhite, P, HR, output } from '../components/elements';
 import { card, approvalNotification, swapNotification, ModalTable, TokenSymbol } from '../components/common';
 import 'antd/dist/antd.css'
 import spinner from '../../assets/images/spinner.svg'
@@ -77,17 +77,17 @@ const SimpleSwap = (props) => {
     })
     const [inputSymbol, setInputSymbol] = useState({
         'symbol': 'XXX',
-     })
+    })
 
     const [outputSymbol, setOutputSymbol] = useState({
         'symbol': 'XXX',
-     })
+    })
 
     const [key, setKey] = useState({
         'key': '1',
-     })
+    })
 
-    
+
     /*_________________________________________________________________*/
 
     const [approval, setApproval] = useState(false)
@@ -133,7 +133,6 @@ const SimpleSwap = (props) => {
         console.log(walletData)
 
         setPool(await getPoolData(AddressTo, context.poolsData))
-        setSwapData(await getSwapData(inputTokenData.balance, inputTokenData, outputTokenData, pool))
     }
 
     const getSwapData = async (inputAmount, inputTokenData, outputTokenData, pool) => {
@@ -155,15 +154,13 @@ const SimpleSwap = (props) => {
     }
 
     const checkApproval = async (address) => {
-        if (address == BNB_ADDR || address == WBNB_ADDR) {
+        const contract = getTokenContract(address)
+        const approval = await contract.methods.allowance(context.walletData.address, ROUTER_ADDR).call()
+        if (+approval > 0) {
             setApproval(true)
         }
         else {
-            const contract = getTokenContract(address)
-            const approval = await contract.methods.allowance(context.walletData.address, ROUTER_ADDR).call()
-            if (+approval > 0) {
-                setApproval(true)
-            }
+            setApproval(false)
         }
     }
 
@@ -172,69 +169,21 @@ const SimpleSwap = (props) => {
         onInputAmountChange(maxBalance)
     }
 
-
-
     /* ______________________________________________INPUTS __________________________________________________________ */
-
-    const onInputChange = async (e) => {
-        try {
-            if (e === SPARTA_ADDR || e === BNB_ADDR || e === WBNB_ADDR) /*TO-DO: A Check against valid addresses in wallet instead of set ones*/ {
-                setApproval(false)
-                setAssetFrom(e)
-                let token = await getTokenData(e, context.walletData)
-                setInputTokenData(token)
-                checkApproval(AddressFrom)
-                setSwapData(await getSwapData(inputAmount, e, outputTokenData, pool))
-            }
-            else {
-                try {
-                    setInputTokenData({
-                        'symbol': 'NaN',
-                        'name': 'NaN',
-                        'balance': 0,
-                        'address': 'NaN'
-                    })
-                }
-                catch (err) {
-                    console.log(err)
-                }
-            }
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
 
     const onInputAmountChange = async (e) => {
         try {
             setinputAmount(e)
-            setSwapData(await getSwapData(convertToWei(e), inputTokenData, outputTokenData, pool))
         }
         catch (err) {
             console.log(err)
         }
     }
 
-    /*________________________________________________OUTPUTS_________________________________________________________*/
-
-    const onOutputChange = async (e) => {
-        try {
-            setAssetTo(e)
-            let token = await getTokenData(e, context.walletData)
-            setOutputTokenData(token)
-            let _pool = await getPool(AddressTo)
-            setPool(_pool)
-            setSwapData(await getSwapData(inputAmount, inputTokenData, e, _pool))
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
     /* ______________________________________________STEPS TO SWAP_____________________________________________________ */
 
     /* Step 1 */
     const approve = async () => {
-        checkApproval(AddressTo)
         const contract = getTokenContract(AddressFrom)
         const supply = await contract.methods.totalSupply().call()
         await contract.methods.approve(ROUTER_ADDR, supply).send({
@@ -242,7 +191,7 @@ const SimpleSwap = (props) => {
             gasPrice: '',
             gas: ''
         })
-        approvalNotification()
+        checkApproval(AddressFrom)
     }
 
     /* Step 2 */
@@ -264,7 +213,6 @@ const SimpleSwap = (props) => {
 
     /* __________________________________________________________________________________________________ */
 
-    
 
     function GetIcon(address) {
         if (address == SPARTA_ADDR) {
@@ -281,15 +229,14 @@ const SimpleSwap = (props) => {
     function setInputSelection() {
         openAddress()
         setKey('1')
-        console.log(key)  
-        
+        console.log(key)
+
     }
     function setOutputSelection() {
         openAddress()
         setKey('2')
-        console.log(key)        
+        console.log(key)
     }
-    
 
     async function setData(address, symbol) {
         try {
@@ -298,25 +245,19 @@ const SimpleSwap = (props) => {
                 setAssetFrom(address)
                 setInputSymbol(symbol)
                 let token = await getTokenData(address, context.walletData)
-                setInputTokenData(token)
-                checkApproval(AddressFrom)
-                console.log(address)
-                console.log(symbol)
-                console.log(AddressFrom)
+                setInputTokenData(token)                
             }
             else if (key === '2') {
                 setAssetTo(address)
                 setOutputSymbol(symbol)
-                console.log(address)
-                console.log(symbol)
-                console.log(AddressTo)
+                setPool(await getPoolData(AddressTo, context.poolsData))
             }
             else {
                 console.log(key)
             }
             return
         }
-        catch(err){
+        catch (err) {
             console.log(err)
         }
     }
@@ -325,14 +266,13 @@ const SimpleSwap = (props) => {
 
         const context = useContext(Context)
         const TokenTable = () => {
-            
+
             const columns = [
                 {
                     render: (record) => (
-                        <Button
-                            onClick={() => setData(record.address, record.symbol)}>
+                        <Button onClick={() => setData(record.address, record.symbol)}>
                             <ModalTable
-                                address={record.address} 
+                                address={record.address}
                                 symbol={record.symbol}
                                 size={35} />
                         </Button>
@@ -341,13 +281,7 @@ const SimpleSwap = (props) => {
             ]
             return (
                 <div>
-                    <div>
-                        <Input
-                            id="search_input"
-                            placeholder={'Enter a token symbol'}
-                            onChange={''}
-                        /> <Button><SearchOutlined /></Button></div>
-                    <HR></HR>
+
                     <Table
                         dataSource={context.poolsData}
                         showHeader={false}
@@ -438,8 +372,7 @@ const SimpleSwap = (props) => {
                                         <div className='leftAlign'>
                                             <Input
                                                 bordered={false}
-                                                placeholder='0.0'
-                                                value={''}
+                                                placeholder={getSwapOutput(inputAmount, pool, false)}
                                                 style={{ height: 30, fontSize: 30, color: 'white' }}
                                             />
                                         </div>
@@ -474,12 +407,10 @@ const SimpleSwap = (props) => {
                     <div className="bottomContainer">
                         <div className="centerObject2">
                             <Container>
-                            <P>Slippage: </P>
-                            <P>Fee: </P>
-                            <P>Sending Token Address: {AddressFrom.toString()}</P>
-                            <P>Receiving Token Address: {AddressTo.toString()}</P>
-                           < br/>
-                           
+                                < br />
+                                <P>Slippage: {formatBN(getSwapSlip(inputAmount, pool, false)).toString()}</P>
+                                <P>Fee: {formatBN(getSwapOutput(inputAmount, pool, false)).toString()}</P>
+                                < br />
                             </Container>
                         </div>
                     </div>

@@ -8,8 +8,9 @@
     "\\src\\ui\\components\\Header",
     "\\src\\ui\\components\\StyleSheets",
     "\\src\\ui\\layout",
+    "\\src\\ui\\layout\\theme",
     "\\src\\ui\\pages"
   ],
-  "SelectedNode": "\\src\\client\\web3.js",
+  "SelectedNode": "\\src\\ui\\components\\StyleSheets\\Modal.css",
   "PreviewInSolutionExplorer": false
 }

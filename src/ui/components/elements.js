@@ -264,6 +264,22 @@ export const HR = () => (
     </div>
 )
 
+export const output = (props) => {
+    let styles = { ...props.style || {} }
+    styles.fontSize = "30px"
+    styles.color = Colour().white
+    styles.display = "block"
+
+    if (props.size) {
+        styles.fontSize = props.size
+    }
+    return (
+        <span style={styles}>
+            {props.children}
+        </span>
+    )
+}
+
 export const Button = (props) => {
     let styles = { ...props.style || {} }
     // styles.fontSize = "16px"
